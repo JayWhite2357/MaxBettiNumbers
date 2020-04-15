@@ -18,15 +18,16 @@ getMaxBettis = (F, G, f, g, n) -> (
   print("cat pileout | python3 ~/deckstack/deckstack.py " | toString(n + 2) | " > pileres");
   run("cat pileout | python3 ~/deckstack/deckstack.py " | toString(n + 2) | " -a > pileres");
   result := lines get "pileres";
-  addV = sum lexBetti (g, n);
+  addV := sum lexBetti (g, n);
+  addS := sum g;
   i = 0;
   while result#?i list (
     (rSize, rCount) := value result_i;
     rValue := addV + toList drop(value result_(i+1),1);
     rFuncs := for j from 1 to rCount list g + toList value result_(i+1+j);
     i = i + rCount + 2;
-    (rSize + last G, rValue, rFuncs)
+    (rSize + addS, rValue, rFuncs)
   )
 )
 
-r = getMaxBettis ({},{},{1},{1,,,,,100},5)
+r = getMaxBettis({,,,,,201,318},{,,,,,201,318},{,,,,,80,117},{,,,,,80,117},5)
