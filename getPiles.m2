@@ -16,11 +16,11 @@ getPilesAndBounds = (F, G, f, g, n, v) -> (
   Gp := accumulate(plus, 0, g);
   Fs = F - Gp;
   Gs = G - Gp;
-  piles = getpiles(f, g, n);
+  piles = getPiles(f, g, n);
   for i to #f-1 list (
     pile = piles_i;
     vectorPile = pile_0 / (k->v_k);
     cardMins = {0} | pile_1;
-    (vectorPile, cardMins, Gs_i, Fs_i)
+    (vectorPile, Gs_i, Fs_i, cardMins)
   )
 )
