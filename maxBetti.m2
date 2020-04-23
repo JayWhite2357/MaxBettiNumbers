@@ -1,3 +1,4 @@
+restart
 load "getPiles.m2"
 load "optimizeBounds.m2"
 load "lexBetti.m2"
@@ -13,14 +14,14 @@ getMaxBettis = (F, G, f, g, n) -> (
   (F, G, f, g, valid) = optimizeBounds(F, G, f, g);
   if not valid then return null;
   piles = getPilesAndBounds(F, G, f, g, n, v);
-  for pile in piles do ("pileout" << toString(pile) << endl);
-  "pileout" << close;
-  print("cat pileout | python3 ~/deckstack/deckstack.py " | toString(n + 2) | " > pileres");
-  run("cat pileout | python3 ~/deckstack/deckstack.py " | toString(n + 2) | " -a > pileres");
-  result := lines get "pileres";
+
+  pipeIO = openInOut("!python3 ~/deckstack/deckstack.py " | toString(n + 2) | " -a");
+  for pile in piles do (pipeIO << toString(pile) << endl);
+  pipeIO << closeOut;
+  result := lines get pipeIO;
   addV := sum lexBetti (g, n);
   addS := sum g;
-  i = 0;
+  i := 0;
   while result#?i list (
     (rSize, rCount) := value result_i;
     rValue := addV + toList drop(value result_(i+1),1);
@@ -30,4 +31,32 @@ getMaxBettis = (F, G, f, g, n) -> (
   )
 )
 
-r = getMaxBettis({,,,,,201,318},{,,,,,201,318},{,,,,,80,117},{,,,,,80,117},5)
+
+getRawMaxBettis = {F=>{}, G=>{},f=>{},g=>{},NumberOut => symbol All} >> o -> n -> getMaxBettis(o.F,o.G,o.f,o.g,n);
+
+n=10
+R=QQ[x_0..x_n, MonomialOrder=>Lex]
+S=QQ[x_0..x_(n+1), MonomialOrder=>Lex]
+getRawMaxBettis(F=>{,,,,,201,318}, G=>{,,,,,201,318}, f=>{,,,,,80,117}, g=>{,,,,,80,117}, n)
+getRawMaxBettis(F=>{,,,,,201}, G=>{,,,,,201}, f=>{,,,,,80}, g=>{,,,,,80}, n)
+
+
+
+QQ[i]
+p = (1/24)*i^4+(7/12)*i^3+(83/24)*i^2-(25/12)*i+26;
+
+sub(p, i=>40)
+
+
+loadPackage("MaxBettiNumbers", Reload=>true, FileName=>"~/github/ExtremalBettiNumbers/Good/MaxBettiNumbers.m2");
+(B,II) = allMaxBettiNumbers(p,,,S)
+t2 = tv#0
+tv#1
+(B, VerticalList (II/(I->hilbertFunct sub(I,R))))
+((last BB)_1, VerticalList last last BB)
+t1
+t2
+
+B
+
+II

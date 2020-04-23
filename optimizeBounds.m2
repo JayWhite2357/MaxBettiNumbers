@@ -22,10 +22,10 @@ cleanAccumulatedLowerBound = (G, g) -> (
 )
 
 cleanBounds = (F, G, f, g, n) -> (
-  l := max(#F, #G, #f, #g);
-  if l < 2 then return (F, G, f, g, false);
+  l := max(#F, #G, #f, #g, 2);
+  --if l < 2 then return (F, G, f, g, false);
   (F, G, f, g) = (F, G, f, g) / padList_l;
-  f = replace(1, if f_1 == null then n else min(f_1, n), f);
+  f = replace(1, if f_1 == null then n+1 else min(f_1, n+1), f);
   (F, f) = cleanAccumulatedUpperBound((F, f) / cleanUpperBound);
   (G, g) = cleanAccumulatedLowerBound((G, g) / cleanLowerBound);
   (F, G, f, g, min(min(F - G), min(f - g)) >= 0)
