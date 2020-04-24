@@ -14,7 +14,7 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
   (F, G, f, g, valid) = optimizeBounds(F, G, f, g);
   if not valid then return null;
   piles := getPilesAndBounds(F, G, f, g, n, v);
-  pipeIO := openInOut("!python3 ~/deckstack/deckstack.py " | toString(n + 2) | " -a");
+  pipeIO := openInOut("!python3 MaxBettiNumbers/deckstack.py " | toString(n + 2) | " -a");
   for pile in piles do (pipeIO << toString(pile) << endl);
   pipeIO << closeOut;
   result := lines get pipeIO;

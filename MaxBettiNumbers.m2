@@ -23,10 +23,10 @@ maxBettiNumbers = method(TypicalValue => List, Options => true);
 lexBettiNumbers = method(TypicalValue => List);
 
 
-load "getPiles.m2"
-load "optimizeBounds.m2"
-load "lexBetti.m2"
-load "polyToBounds.m2"
+load "./MaxBettiNumbers/getPiles.m2"
+load "./MaxBettiNumbers/optimizeBounds.m2"
+load "./MaxBettiNumbers/lexBetti.m2"
+load "./MaxBettiNumbers/polyToBounds.m2"
 
 getMaxBettis = (F, G, f, g, n, ivar) -> (
   v := for i to n list (
@@ -39,7 +39,7 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
   (F, G, f, g, valid) = optimizeBounds(F, G, f, g);
   if not valid then return null;
   piles := getPilesAndBounds(F, G, f, g, n, v);
-  pipeIO := openInOut("!python3 ~/deckstack/deckstack.py " | toString(n + 2) | " -a");
+  pipeIO := openInOut("!python3 ./MaxBettiNumbers/deckstack.py " | toString(n + 2) | " -a");
   for pile in piles do (pipeIO << toString(pile) << endl);
   pipeIO << closeOut;
   result := lines get pipeIO;
