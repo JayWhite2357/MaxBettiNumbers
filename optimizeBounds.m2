@@ -1,4 +1,4 @@
-loadPackage("LexIdeals", Reload=>false)
+loadPackage("LexIdeals")
 macaulayDown = (b,e) -> sum(binomial@@toSequence@@plus_{-1,-1}\macaulayRep(b,e));
 
 
@@ -21,6 +21,7 @@ cleanAccumulatedLowerBound = (G, g) -> (
   (for e to #G - 1 list p = max(G_e, p + g_e), g)
 )
 
+
 cleanBounds = (F, G, f, g, n) -> (
   l := max(#F, #G, #f, #g, 2);
   --if l < 2 then return (F, G, f, g, false);
@@ -31,7 +32,45 @@ cleanBounds = (F, G, f, g, n) -> (
   (F, G, f, g, min(min(F - G), min(f - g)) >= 0)
 )
 
-optimizeBounds = (F, G, f, g) -> (F, G, f, g, true)
+
+
+optimizeLowerBound = (F, G, g) -> (
+  ng := G - prepend(0, drop(F, -1));
+  max\transpose{g, ng}
+)
+optimizeUpperBound = (F, G, f) -> (
+  nf := F - prepend(0, drop(G, -1));
+  min\transpose{f, nf}
+)
+
+
+
+optimizeAccumulatedLowerBound = (G, f) -> (
+  p := 0;
+  reverse for e in reverse(0..#G-1) list p = max(G_e, p) do p = p - f_e
+)
+optimizeAccumulatedUpperBound = (F, g) -> (
+  p := infinity;
+  reverse for e in reverse(0..#F-1) list p = min(F_e, p) do p = p - g_e
+)
+
+
+
+optimizeBounds = (F, G, f, g) -> (
+  (pF, pG, pf, pg) := (null, null, null, null);
+  while (pF, pG, pf, pg) =!= (F, G, f, g) do (
+    (pF, pG, pf, pg) = (F, G, f, g);
+    g = optimizeLowerBound(F, G, g);
+    f = optimizeUpperBound(F, G, f);
+    (F, f) = cleanAccumulatedUpperBound((F, f) / cleanUpperBound);
+    (G, g) = cleanAccumulatedLowerBound((G, g) / cleanLowerBound);
+    G = optimizeAccumulatedLowerBound(G, f);
+    F = optimizeAccumulatedUpperBound(F, g);
+    (F, f) = cleanAccumulatedUpperBound((F, f) / cleanUpperBound);
+    (G, g) = cleanAccumulatedLowerBound((G, g) / cleanLowerBound);
+  );
+  (F, G, f, g, true)
+)
 
 
 cleanBounds ({},{},{1},{1,,,,,100},5)
