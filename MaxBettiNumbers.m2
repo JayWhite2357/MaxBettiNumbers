@@ -39,7 +39,10 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
   (F, G, f, g, valid) = optimizeBounds(F, G, f, g);
   if not valid then return null;
   piles := getPilesAndBounds(F, G, f, g, n, v);
-  pipeIO := openInOut("!python3 ./MaxBettiNumbers/deckstack.py " | toString(n + 2) | " -a");
+  deckstackPath := searchPath "./MaxBettiNumbers/deckstack.py";
+  deckstackFile := (first deckstackPath) | "./MaxBettiNumbers/deckstack.py";
+  deckstackCmd := concatenate("!python",1,deckstackFile,1,toString(n+2),1,"-a");
+  pipeIO := openInOut(deckstackCmd);
   for pile in piles do (pipeIO << toString(pile) << endl);
   pipeIO << closeOut;
   result := lines get pipeIO;
@@ -91,6 +94,7 @@ maxBettiNumbers ZZ := {HilbertPolynomial=>null, UpperHilbertPolynomialBound=>nul
 );
 
 end
+M2
 restart
 loadPackage("MaxBettiNumbers", Reload=>true)
 
