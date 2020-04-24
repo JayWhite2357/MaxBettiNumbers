@@ -14,6 +14,7 @@ minPolyBoundDegree = p -> (
 );
 
 polyToBounds = (p, d) -> (
+  i := (ring p)_0;
   pd := sub(sub(p,i=>d),ZZ);
   pm := sub(sub(p,i=>d-1),ZZ);
   (pd-pm,pd)

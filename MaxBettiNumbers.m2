@@ -1,3 +1,25 @@
+-- -*- coding: utf-8 -*-
+newPackage(
+  "MaxBettiNumbers",
+      Version => "0.1.1",
+      Date => "April 24, 2020",
+      Authors => {{Name => "Jay White",
+      Email => "jay.white@uky.edu"}},
+      Headline => "Methods to find Maximum Betti Numbers given bounds on the Hilbert Function",
+      DebuggingMode => true
+      )
+
+export {"maxBettiNumbers",
+"LowerHilbertFunctionBound", "LowerHilbertPolynomialBound", "LowerHilbertDifferenceBound",
+"UpperHilbertFunctionBound", "UpperHilbertPolynomialBound", "UpperHilbertDifferenceBound",
+"HilbertPolynomial",
+"NumberOut", "All"
+}
+
+
+maxBettiNumbers = method(TypicalValue => List, Options => true);
+
+
 load "getPiles.m2"
 load "optimizeBounds.m2"
 load "lexBetti.m2"
@@ -33,10 +55,10 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
     p := sum(macaulayRep(pd,d)/(l->binomial(l_0,sub(l_0-l_1,ZZ)))@@plus_{ivar-d,ivar-d});
     (p, rValue, rFuncs, rMax)
   )
-)
+);
 
 
-getRawMaxBettis = {HilbertPolynomial=>null, UpperHilbertPolynomialBound=>null, LowerHilbertPolynomialBound=>null, UpperHilbertFunctionBound=>{}, LowerHilbertFunctionBound=>{}, UpperHilbertDifferenceBound=>{}, LowerHilbertDifferenceBound=>{}, NumberOut => symbol All} >> o -> n -> (
+maxBettiNumbers ZZ := {HilbertPolynomial=>null, UpperHilbertPolynomialBound=>null, LowerHilbertPolynomialBound=>null, UpperHilbertFunctionBound=>{}, LowerHilbertFunctionBound=>{}, UpperHilbertDifferenceBound=>{}, LowerHilbertDifferenceBound=>{}, NumberOut => All} >> o -> n -> (
   F := o.UpperHilbertFunctionBound;
   G := o.LowerHilbertFunctionBound;
   f := o.UpperHilbertDifferenceBound;
@@ -45,24 +67,32 @@ getRawMaxBettis = {HilbertPolynomial=>null, UpperHilbertPolynomialBound=>null, L
   pU := o.UpperHilbertPolynomialBound;
   pL := o.LowerHilbertPolynomialBound;
   d := 0;
-  if p =!= null then d = max(d, minPolyBoundDegree(p));
-  if pU =!= null then d = max(d, minPolyBoundDegree(pU));
-  if pL =!= null then d = max(d, minPolyBoundDegree(pL));
+  iv := (QQ[local i])_0;
+  if pU =!= null then (
+    d = max(d, minPolyBoundDegree(pU));
+    iv = (ring pU)_0;
+  );
+  if pL =!= null then (
+    d = max(d, minPolyBoundDegree(pL));
+    iv = (ring pL)_0;
+  );
+  if p =!= null then (
+    d = max(d, minPolyBoundDegree(p));
+    iv = (ring p)_0;
+  );
   (F, f) = polyCleanUpper(F, f, p, d);
   (F, f) = polyCleanUpper(F, f, pU, d);
   (G, g) = polyCleanLower(G, g, p, d);
   (G, g) = polyCleanLower(G, g, pL, d);
-  getMaxBettis(F,G,f,g,n,(QQ[i])_0)
+  getMaxBettis(F,G,f,g,n,iv)
 );
 
 end
-
-
 restart
-load "maxBetti.m2"
+loadPackage("MaxBettiNumbers", Reload=>true)
 
 QQ[i]
 pUpper=3*i^2-6*i+175;
 pLower=3*i^2-6*i+150;
 
-result = getRawMaxBettis(4, UpperHilbertPolynomialBound => pUpper, LowerHilbertPolynomialBound => pLower);
+result = maxBettiNumbers(4, UpperHilbertPolynomialBound => pUpper, LowerHilbertPolynomialBound => pLower);
