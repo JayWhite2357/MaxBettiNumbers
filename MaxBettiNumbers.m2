@@ -6,10 +6,12 @@ newPackage(
       Authors => {{Name => "Jay White",
       Email => "jay.white@uky.edu"}},
       Headline => "Methods to find Maximum Betti Numbers given bounds on the Hilbert Function",
-      DebuggingMode => true
+      DebuggingMode => true,
+      AuxiliaryFiles => true,
+      PackageImports => {"LexIdeals"}
       )
 
-export {"maxBettiNumbers",
+export {"maxBettiNumbers", "lexBettiNumbers",
 "LowerHilbertFunctionBound", "LowerHilbertPolynomialBound", "LowerHilbertDifferenceBound",
 "UpperHilbertFunctionBound", "UpperHilbertPolynomialBound", "UpperHilbertDifferenceBound",
 "HilbertPolynomial",
@@ -18,6 +20,7 @@ export {"maxBettiNumbers",
 
 
 maxBettiNumbers = method(TypicalValue => List, Options => true);
+lexBettiNumbers = method(TypicalValue => List);
 
 
 load "getPiles.m2"
@@ -40,7 +43,7 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
   for pile in piles do (pipeIO << toString(pile) << endl);
   pipeIO << closeOut;
   result := lines get pipeIO;
-  addV := sum lexBetti (g, n);
+  addV := sum lexBettiNumbers (g, n);
   d := #g - 1;
   addS := sum g;
   i := 0;
@@ -92,7 +95,7 @@ restart
 loadPackage("MaxBettiNumbers", Reload=>true)
 
 QQ[i]
-pUpper=3*i^2-6*i+175;
-pLower=3*i^2-6*i+150;
+pUpper=2*i+25;
+pLower=2*i+10;
 
 result = maxBettiNumbers(4, UpperHilbertPolynomialBound => pUpper, LowerHilbertPolynomialBound => pLower);

@@ -1,4 +1,3 @@
-loadPackage("LexIdeals")
 macaulayDown = (b,e) -> sum(binomial@@toSequence@@plus_{-1,-1}\macaulayRep(b,e));
 
 

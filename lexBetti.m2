@@ -1,5 +1,5 @@
 --Computes the betti numbers of the lex ideal with the given hilbert function.
-lexBetti = (h, n) -> (
+lexBettiNumbers (List, ZZ) := (h, n) -> (
   b := for i to n list for q to n list binomial(i, q);
   z := for i to n list 0;
   idxs := {0};
