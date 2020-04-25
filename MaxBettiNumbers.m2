@@ -12,10 +12,10 @@ newPackage(
       )
 
 export {"maxBettiNumbers", "lexBettiNumbers",
-"LowerHilbertFunctionBound", "LowerHilbertPolynomialBound", "LowerHilbertDifferenceBound",
-"UpperHilbertFunctionBound", "UpperHilbertPolynomialBound", "UpperHilbertDifferenceBound",
+"HilbertFunctionLowerBound", "HilbertPolynomialLowerBound", "HilbertDifferenceLowerBound",
+"HilbertFunctionUpperBound", "HilbertPolynomialUpperBound", "HilbertDifferenceUpperBound",
 "HilbertPolynomial",
-"NumberOut", "All"
+"ResultsCount", "All", "Single", "None"
 }
 
 
@@ -28,7 +28,7 @@ load "./MaxBettiNumbers/optimizeBounds.m2"
 load "./MaxBettiNumbers/lexBetti.m2"
 load "./MaxBettiNumbers/polyToBounds.m2"
 
-getMaxBettis = (F, G, f, g, n, ivar) -> (
+getMaxBettis = (F, G, f, g, n, ivar, deckstackargs) -> (
   v := for i to n list (
     vec := for q to n list binomial(n+1,q+1)-binomial(i+1,q+1);
     prepend(sum vec, vec)--This is a checksum to verify that the result is a maximum as opposed to simply maximal.
@@ -41,7 +41,7 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
   piles := getPilesAndBounds(F, G, f, g, n, v);
   deckstackPath := searchPath "./MaxBettiNumbers/deckstack.py";
   deckstackFile := (first deckstackPath) | "./MaxBettiNumbers/deckstack.py";
-  deckstackCmd := concatenate("!python",1,deckstackFile,1,toString(n+2),1,"-a");
+  deckstackCmd := concatenate("!python",1,deckstackFile,1,toString(n+2),1,deckstackargs);
   pipeIO := openInOut(deckstackCmd);
   for pile in piles do (pipeIO << toString(pile) << endl);
   pipeIO << closeOut;
@@ -49,6 +49,7 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
   addV := sum lexBettiNumbers (g, n);
   d := #g - 1;
   addS := sum g;
+  appendg := macaulayBound(last g, d);
   i := 0;
   while result#?i list (
     (rSize, rCount) := value result_i;
@@ -58,20 +59,37 @@ getMaxBettis = (F, G, f, g, n, ivar) -> (
     rFuncs := for j from 1 to rCount list g + toList value result_(i+1+j);
     i = i + rCount + 2;
     pd := rSize + addS;
-    p := sum(macaulayRep(pd,d)/(l->binomial(l_0,sub(l_0-l_1,ZZ)))@@plus_{ivar-d,ivar-d});
-    (p, rValue, rFuncs, rMax)
+    p := sum(macaulayRep(last g, d) / (l ->
+      binomial(
+        l_0 + ivar - d + 1,
+        sub(l_0 - l_1 + 1, ZZ))
+      ));
+    p = p + pd - sub(p+0*ivar, ivar=>d);
+    (p, rValue, rFuncs / accumulate_(plus,0), rMax)
   )
 );
 
 
-maxBettiNumbers ZZ := {HilbertPolynomial=>null, UpperHilbertPolynomialBound=>null, LowerHilbertPolynomialBound=>null, UpperHilbertFunctionBound=>{}, LowerHilbertFunctionBound=>{}, UpperHilbertDifferenceBound=>{}, LowerHilbertDifferenceBound=>{}, NumberOut => All} >> o -> n -> (
-  F := o.UpperHilbertFunctionBound;
-  G := o.LowerHilbertFunctionBound;
-  f := o.UpperHilbertDifferenceBound;
-  g := o.LowerHilbertDifferenceBound;
+maxBettiNumbers ZZ := {
+  HilbertPolynomial=>null,
+  HilbertPolynomialUpperBound=>null,
+  HilbertPolynomialLowerBound=>null,
+  HilbertFunctionUpperBound=>{},
+  HilbertFunctionLowerBound=>{},
+  HilbertDifferenceUpperBound=>{},
+  HilbertDifferenceLowerBound=>{},
+  ResultsCount => All
+} >> o -> n -> (
+  F := o.HilbertFunctionUpperBound;
+  G := o.HilbertFunctionLowerBound;
+  f := o.HilbertDifferenceUpperBound;
+  g := o.HilbertDifferenceLowerBound;
   p := o.HilbertPolynomial;
-  pU := o.UpperHilbertPolynomialBound;
-  pL := o.LowerHilbertPolynomialBound;
+  pU := o.HilbertPolynomialUpperBound;
+  pL := o.HilbertPolynomialLowerBound;
+  deckstackargs := "-a";
+  if o.ResultsCount === Single then deckstackargs = "-s";
+  if o.ResultsCount === None then deckstackargs = "-n";
   d := 0;
   iv := (QQ[local i])_0;
   if pU =!= null then (
@@ -90,7 +108,7 @@ maxBettiNumbers ZZ := {HilbertPolynomial=>null, UpperHilbertPolynomialBound=>nul
   (F, f) = polyCleanUpper(F, f, pU, d);
   (G, g) = polyCleanLower(G, g, p, d);
   (G, g) = polyCleanLower(G, g, pL, d);
-  getMaxBettis(F,G,f,g,n,iv)
+  getMaxBettis(F, G, f, g, n, iv, deckstackargs)
 );
 
 end
@@ -99,7 +117,12 @@ restart
 loadPackage("MaxBettiNumbers", Reload=>true)
 
 QQ[i]
-pUpper=2*i+25;
-pLower=2*i+10;
+pUpper=3*i^2-6*i+175;
+pLower=3*i^2-6*i+165;
 
-result = maxBettiNumbers(4, UpperHilbertPolynomialBound => pUpper, LowerHilbertPolynomialBound => pLower);
+printNicely = result -> netList (Alignment=>Center,Boxes=>false,HorizontalSpace=>3, prepend({"HilbertPolynomial", "Total Betti Numbers", "Hilbert Function", "Sharp"}, toList\result))
+printCountNicely = result -> netList (Alignment=>Center,Boxes=>false,HorizontalSpace=>3, prepend({"HilbertPolynomial", "Total Betti Numbers", "#Hilbert Functions", "Sharp"}, (r->{r_0,r_1,#r_2,r_3})\result))
+
+printCountNicely maxBettiNumbers(ResultsCount=>All, 4, HilbertPolynomialUpperBound => pUpper, HilbertPolynomialLowerBound => pLower)
+
+VerticalList maxBettiNumbers(6,ResultsCount=>None)
