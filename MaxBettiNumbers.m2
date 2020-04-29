@@ -11,16 +11,18 @@ newPackage(
       PackageImports => {"LexIdeals"}
       )
 
-export {"maxBettiNumbers", "lexBettiNumbers",
+export {"maxBettiNumbers",
 "HilbertFunctionLowerBound", "HilbertPolynomialLowerBound", "HilbertDifferenceLowerBound",
 "HilbertFunctionUpperBound", "HilbertPolynomialUpperBound", "HilbertDifferenceUpperBound",
 "HilbertPolynomial",
-"ResultsCount", "All", "Single", "None"
+"ResultsCount", "All", "Single", "None",
+"lexBettiNumbers",
+"AsTally"
 }
 
 
 maxBettiNumbers = method(TypicalValue => List, Options => true);
-lexBettiNumbers = method(TypicalValue => List);
+lexBettiNumbers = method(TypicalValue => List, Options => true);
 
 
 load "./MaxBettiNumbers/getPiles.m2"
@@ -46,7 +48,7 @@ getMaxBettis = (F, G, f, g, n, ivar, deckstackargs) -> (
   for pile in piles do (pipeIO << toString(pile) << endl);
   pipeIO << closeOut;
   result := lines get pipeIO;
-  addV := sum lexBettiNumbers (g, n);
+  addV := sum lexBettiNumbers (n, g, AsTally => false);
   d := #g - 1;
   addS := sum g;
   appendg := macaulayBound(last g, d);
@@ -111,7 +113,12 @@ maxBettiNumbers ZZ := {
   getMaxBettis(F, G, f, g, n, iv, deckstackargs)
 );
 
+beginDocumentation()
+load "./MaxBettiNumbers/doc.m2"
 end
+
+
+
 M2
 restart
 loadPackage("MaxBettiNumbers", Reload=>true)
