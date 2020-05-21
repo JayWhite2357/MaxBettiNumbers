@@ -70,6 +70,3 @@ optimizeBounds = (F, G, f, g) -> (
   );
   (F, G, f, g, true)
 )
-
-
-cleanBounds ({},{},{1},{1,,,,,100},5)
