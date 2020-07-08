@@ -41,9 +41,6 @@ load "MainMethod.m2"
 
 end
 
-cat MBNheader.m2 mRep.m2 BuildVlb.m2 SimplifiedNone.m2 SimplifiedSome.m2 SimplifiedAll.m2 CompleteNone.m2 CompleteSome.m2 CompleteAll.m2 sanitizeBounds.m2 sanitizePolynomial.m2 optimizeBounds.m2 SanitizeInputs.m2 UnravelHFs.m2 lexBetti.m2 MaxType.m2 MainMethod.m2 MBNfooter.m2
-
-
 M2
 restart
 loadPackage "MaxBettiNumbers";
