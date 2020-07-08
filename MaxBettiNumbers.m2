@@ -122,14 +122,18 @@ end
 M2
 restart
 loadPackage("MaxBettiNumbers", Reload=>true)
+needsPackage("LexIdeals")
+
 
 QQ[i]
 pUpper=3*i^2-6*i+175;
-pLower=3*i^2-6*i+165;
+pLower=3*i^2-6*i+175;
 
 printNicely = result -> netList (Alignment=>Center,Boxes=>false,HorizontalSpace=>3, prepend({"HilbertPolynomial", "Total Betti Numbers", "Hilbert Function", "Sharp"}, toList\result))
 printCountNicely = result -> netList (Alignment=>Center,Boxes=>false,HorizontalSpace=>3, prepend({"HilbertPolynomial", "Total Betti Numbers", "#Hilbert Functions", "Sharp"}, (r->{r_0,r_1,#r_2,r_3})\result))
 
-printCountNicely maxBettiNumbers(ResultsCount=>All, 4, HilbertPolynomialUpperBound => pUpper, HilbertPolynomialLowerBound => pLower)
+elapsedTime maxBettiNumbers(ResultsCount=>None, 4, HilbertPolynomial => 3*i^2-6*i+175)
+
+result
 
 VerticalList maxBettiNumbers(6,ResultsCount=>None)
