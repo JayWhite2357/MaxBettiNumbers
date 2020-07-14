@@ -1,3 +1,6 @@
+--- This function gives the minimum degree at which that every saturated ideal
+--- with hilbert polynomial p is guarenteed to have hilbert function match
+--- hilbert polynomial
 minPolyBoundDegree = p -> (
   n := first degree p;
   i := (ring p)_0;
@@ -9,10 +12,13 @@ minPolyBoundDegree = p -> (
     n = first degree tmpp;
   );
   d := sub(tmpp,ZZ);
-  if lC > d then print "Invalid Hilbert Polynomial! Trying to continue.";
+  if lC > d then error "Invalid Hilbert Polynomial.";
   d
 );
 
+--- This function sets G,F,g,f to be the appropriate values to ensure that all
+--- ideals in the family have the specified hilbert polynomial
+--- if no polynomial is specified, nothing is done.
 cleanPolynomial = (G, F, g, f, p, d) -> (
   if p =!= null then (
     i := (ring p)_0;

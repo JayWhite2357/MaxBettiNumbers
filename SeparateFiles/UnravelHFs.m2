@@ -1,4 +1,4 @@
-UnravelHFs = (HFs, G, g, lb) -> (
+UnravelSimplifiedHFs = (HFs, G, g, lb) -> (
   partialUnraveled := {(last G,{})};
   isFirst := true;
   while HFs#?0 do (
@@ -49,7 +49,7 @@ UnravelCompleteHFs = (HFs, G, g, lb) -> (
 );
 
 
-UnravelOne = (HFs, G, g, lb) -> (
+UnravelSimplifiedOne = (HFs, G, g, lb) -> (
   targetSum := last G; result := {};
   for d in reverse( 0..#HFs-1 ) do (
     hd := min( HFs#d#( targetSum - G#d ) );
