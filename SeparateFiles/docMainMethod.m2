@@ -221,6 +221,9 @@ doc ///
       o31 = 26.732769924
 
       o31 : RR (of precision 53)
+  Caveat
+    If @TT"Algorithm=>\"Simplified\""@ is forced, this may not return valid
+    Hilbert functions for some inputs.
   SeeAlso
     MaxBetti  
 ///
