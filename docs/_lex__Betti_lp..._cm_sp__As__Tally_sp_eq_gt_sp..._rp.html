@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
+<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head><title>lexBetti(..., AsTally => ...)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="doc.css"/>
+</head>
+<body>
+<table class="buttons">
+  <tr>
+    <td><div><a href="_lexsegment__Ideal.html">next</a> | <a href="_lex__Betti.html">previous</a> | <a href="_lexsegment__Ideal.html">forward</a> | <a href="_lex__Betti.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
+
+    </td>
+  </tr>
+</table>
+<div><a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="_lex__Betti_lp..._cm_sp__As__Tally_sp_eq_gt_sp..._rp.html" title="">lexBetti(..., AsTally => ...)</a></div>
+<hr/>
+<div><h1>lexBetti(..., AsTally => ...)</h1>
+<div class="single"><h2>Description</h2>
+<div><div><p>This is an option that can be passed to either <a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> or <a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a>. If the value of the option is <tt>true</tt> a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Betti__Tally.html" title="the class of all Betti tallies">BettiTally</a> object will be returned. If it is false, a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html" title="the class of all lists -- {...}">List</a> of lists will be returned. This latter option is useful if one wishes to obtain the total Betti numbers instead of the graded Betti numbers. This can easily be done using by applying <tt>sum</tt> to the output with <tt>AsTally=>false</tt>.</p>
+</div>
+<table class="examples"><tr><td><pre>i1 : lexBetti (4, {1,2,3,3,3,3}, AsTally => true)
+
+            0 1 2 3
+o1 = total: 1 3 3 1
+         0: 1 2 1 .
+         1: . . . .
+         2: . 1 2 1
+
+o1 : BettiTally</pre>
+</td></tr>
+<tr><td><pre>i2 : lexBetti (4, {1,2,3,3,3,3}, AsTally => false)
+
+o2 = {{0, 0, 0, 0}, {2, 1, 0, 0}, {0, 0, 0, 0}, {1, 2, 1, 0}, {0, 0, 0, 0},
+     ------------------------------------------------------------------------
+     {0, 0, 0, 0}}
+
+o2 : List</pre>
+</td></tr>
+<tr><td><pre>i3 : sum oo
+
+o3 = {3, 3, 1, 0}
+
+o3 : List</pre>
+</td></tr>
+</table>
+</div>
+</div>
+<h2>Further information</h2>
+<ul><li><span>Default value: <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/_true.html" title="">true</a></span></li>
+<li><span>Function: <span><a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> -- Graded Betti numbers of a lexsegment ideal.</span></span></li>
+<li><span>Option name: <span><a href="___As__Tally.html" title="">AsTally</a></span></span></li>
+</ul>
+<div class="single"><h2>See also</h2>
+<ul><li><span><a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> -- Graded Betti numbers of a lexsegment ideal.</span></li>
+<li><span><a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a> -- Graded Betti numbers of an almost lexsegment ideal.</span></li>
+</ul>
+</div>
+</div>
+</body>
+</html>
+

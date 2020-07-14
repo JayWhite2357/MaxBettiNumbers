@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
+<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head><title>lexsegmentIdeal -- Create a lexsegment ideal.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="doc.css"/>
+</head>
+<body>
+<table class="buttons">
+  <tr>
+    <td><div><a href="___Max__Betti.html">next</a> | <a href="_lex__Betti_lp..._cm_sp__As__Tally_sp_eq_gt_sp..._rp.html">previous</a> | <a href="___Max__Betti.html">forward</a> | <a href="_lex__Betti_lp..._cm_sp__As__Tally_sp_eq_gt_sp..._rp.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
+
+    </td>
+  </tr>
+</table>
+<div><a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="_lexsegment__Ideal.html" title="Create a lexsegment ideal.">lexsegmentIdeal</a></div>
+<hr/>
+<div><h1>lexsegmentIdeal -- Create a lexsegment ideal.</h1>
+<div class="single"><h2>Synopsis</h2>
+<ul><li><dl class="element"><dt>Usage: </dt><dd><tt>lexsegmentIdeal (S, h)</tt></dd></dl>
+</li>
+<li><div class="single">Inputs:<ul><li><span><tt>S</tt>, <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Polynomial__Ring.html">polynomial ring</a></span>, the ambient polynomial ring.</span></li>
+<li><span><tt>h</tt>, <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, the Hilbert function of the lexsegment ideal.</span></li>
+</ul>
+</div>
+</li>
+<li><div class="single">Outputs:<ul><li><span><span>an <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Ideal.html">ideal</a></span></span></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="single"><h2>Description</h2>
+<div><div><p>Consider a polynomial ring in <tt>N</tt> variables. For any hilbert function, there is a unique lexsegment ideal. Furthermore, this ideal has graded Betti numbers that are at least as large as those of any other ideal with that hilbert function.</p>
+<p>This function returns the lexsegment ideal with the given Hilbert function. Note, because only the truncated version of a Hilbert function can be represented by a list, the Hilbert function is assumed to continue as if it matches its polynomial by the end of the list. In other words, the lexsegment ideal has no generators with degree larger than <tt>#h-1</tt>.</p>
+<p>Note: this method is significantly faster than the similar <tt>lexIdeal</tt> from the package <tt>LexIdeals</tt>.</p>
+</div>
+<table class="examples"><tr><td><pre>i1 : lexsegmentIdeal (QQ[x_1..x_4], {1,2,3,3,3,3})
+
+                     3
+o1 = ideal (x , x , x )
+             1   2   3
+
+o1 : Ideal of QQ[x , x , x , x ]
+                  1   2   3   4</pre>
+</td></tr>
+<tr><td><pre>i2 : lexsegmentIdeal (QQ[x_1..x_4], {1,2,3,3,3,3,0}) --Artinian
+
+                     3   2 4     5   6
+o2 = ideal (x , x , x , x x , x x , x )
+             1   2   3   3 4   3 4   4
+
+o2 : Ideal of QQ[x , x , x , x ]
+                  1   2   3   4</pre>
+</td></tr>
+<tr><td><pre>i3 : lexsegmentIdeal (QQ[x_1..x_5], {1,5,15,35})
+
+o3 = ideal 0
+
+o3 : Ideal of QQ[x , x , x , x , x ]
+                  1   2   3   4   5</pre>
+</td></tr>
+</table>
+</div>
+</div>
+<div class="single"><h2>See also</h2>
+<ul><li><span><a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> -- Graded Betti numbers of a lexsegment ideal.</span></li>
+<li><span><a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> -- Create an almost lexsegment ideal.</span></li>
+</ul>
+</div>
+<div class="waystouse"><h2>Ways to use <tt>lexsegmentIdeal</tt> :</h2>
+<ul><li>lexsegmentIdeal(PolynomialRing,List)</li>
+</ul>
+</div>
+</div>
+</body>
+</html>
+
