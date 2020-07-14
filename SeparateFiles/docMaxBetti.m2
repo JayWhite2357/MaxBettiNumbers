@@ -14,6 +14,8 @@ doc ///
       TEX" - if there is an ideal with the upper bound as its Betti numbers. "},
       {TO MaximalBettiNumbers,TEX" - the maximal total Betti numbers."},
       {TO MaximumBettiSum,TEX" - maximum sum of the total Betti numbers."}}@
+  SeeAlso
+    maxBettiNumbers
 ///
 doc ///
   Key
