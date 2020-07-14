@@ -8,10 +8,10 @@ doc ///
       
       @UL{{TO BettiUpperBound,TEX" - upper bound for the total Betti numbers."},
       {TO HilbertFunctions,
-      TEX" - a list of  Hilbert functions with maximal Betti numbers. See ",
-      TO[maxBettiNumbers,ResultsCount],TEX" for more details."},
-      {TO isRealizable,
-      TEX" - if there is an ideal with the upper bound as its Betti numbers. "},
+      TEX" - a list of  Hilbert functions with maximal total Betti numbers. ",
+      TEX"See ",TO[maxBettiNumbers,ResultsCount],TEX" for more details."},
+      {TO isRealizable,TEX" - if there is an ideal with the upper bound as its",
+      TEX" total Betti numbers."},
       {TO MaximalBettiNumbers,TEX" - the maximal total Betti numbers."},
       {TO MaximumBettiSum,TEX" - maximum sum of the total Betti numbers."}}@
   SeeAlso
@@ -77,7 +77,8 @@ doc ///
       Used as a key in @TO MaxBetti@ with value being a @TO VerticalList@.
       Each item in the list is a set of total Betti numbers that are maximal.
       In other words, no ideal has total Betti numbers that are simultaneously
-      greater than or equal, and there is an ideal with these Betti numbers.
+      greater than or equal, and there is an ideal with these total Betti
+      numbers.
       See @TO[maxBettiNumbers, ResultsCount]@ for more details.
   SeeAlso
     [maxBettiNumbers, ResultsCount]

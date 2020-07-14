@@ -51,11 +51,11 @@ doc ///
       TEX"$g(d)\\leq\\Delta h_{S/I}(d)\\leq f(d)$ for all $d$",
       TEX"$h_{S/I}(d)=p(d)$ for large $d$"}@
       
-      @TT"maxBettiNumbers"@ returns the upper bound for the Betti numbers of the
-      ideals along with other information. A complete description of the output
-      can be found under @TO MaxBetti@.
+      @TT"maxBettiNumbers"@ returns the upper bound for the total Betti numbers
+      of the ideals along with other information.
+      A complete description of the output can be found under @TO MaxBetti@.
       
-      Almost lexsegment ideals have the largest Betti numbers out of all
+      Almost lexsegment ideals have the largest total Betti numbers out of all
       saturated ideals with a given Hilbert function. The function
       @TO almostLexIdeal@ is useful to obtain the ideals with maximal Betti
       numbers.
@@ -114,9 +114,9 @@ doc ///
       
       @HEADER2"Output Results"@
       
-      In addition to upper bounds for the Betti numbers, this function can
-      optionally output Hilbert functions with maximal Betti numbers. This is
-      specified with the optional argument @TT"ResultsCount"@. More details
+      In addition to upper bounds for the total Betti numbers, this function can
+      optionally output Hilbert functions with maximal total Betti numbers. This
+      is specified with the optional argument @TT"ResultsCount"@. More details
       can be found under @TO [maxBettiNumbers, ResultsCount]@.
       
       @HEADER2"Different Algorithms"@
@@ -130,10 +130,12 @@ doc ///
       @HEADER2"More Examples"@
       
       We will consider an example where $S$ is the polynomial ring in $5$
-      variables. This example has only maximal Betti Numbers, and not maximum
-      Betti numbers. Also, the Simplified and Complete algorithms give different
-      results. Both of these are somewhat unusual, but give an illuminating
-      example. We will choose the following constraints:
+      variables.
+      This example has only maximal total Betti Numbers, and not maximum total
+      Betti numbers.
+      Also, the Simplified and Complete algorithms give different results.
+      Both of these are somewhat unusual, but give an illuminating example.
+      We will choose the following constraints:
       $$h_{S/I}(6)=41\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
       h_{S/I}(d)=49\ for\ large\ d$$
       $$8\leq \Delta h_{S/I}(3)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
@@ -149,17 +151,18 @@ doc ///
       F = HilbertFunctionUpperBound => {,,,,,,41};
       p = HilbertPolynomial => 49;
     Text
-      We find that $(23, 54, 47, 14)$ is the upper bound for the Betti numbers
-      of all saturated ideals with these constraints. Additionally, the maximum
-      for the sum of the Betti numbers is $137$. Note that because
-      $23+54+47+14=138$, there is no single ideal with Betti numbers of
-      $(23, 54, 47, 14)$.
+      We find that $(23, 54, 47, 14)$ is the upper bound for the total Betti
+      numbers of all saturated ideals with these constraints.
+      Additionally, the maximum for the sum of the Betti numbers is $137$.
+      Note that because $23 + 54 + 47 + 14 = 138$, there is no single ideal with
+      total Betti numbers of $(23, 54, 47, 14)$.
     Example
       maxBettiNumbers(N,p,g,G,F)
     Text
-      If we want the Hilbert function of an ideal with maximal Betti numbers, we
-      can pass @TT"ResultsCount=>\"One\""@ as an option. Note, this gives an
-      ideal with the maximum for the sum of the Betti numbers.
+      If we want the Hilbert function of an ideal with maximal total Betti
+      numbers, we can pass @TT"ResultsCount=>\"One\""@ as an option.
+      Note, this gives an ideal with the maximum for the sum of the Betti
+      numbers.
     Example
       maxBettiNumbers(N,p,g,G,F, ResultsCount=>"One")
     Text
@@ -170,9 +173,10 @@ doc ///
       maxBettiNumbers(N,p,g,G,F, ResultsCount=>"AllMaxBettiSum")
     Text
       Finally, if we want the Hilbert function of all ideals that have maximal
-      Betti numbers, we can pass @TT"ResultsCount=>\"All\""@ as an option. This
-      additionally gives $(23,54,45,13)$ and $(22,54,47,14)$, which are the
-      maximal Betti numbers.
+      total Betti numbers, we can pass @TT"ResultsCount=>\"All\""@ as an option.
+      In addition to returning the upper bound and Hilbert functions, the
+      maximal total Betti numbers of $(23, 54, 45, 13)$ and $(22, 54, 47, 14)$
+      are also returned.
     Example
       maxBettiNumbers(N,p,g,G,F, ResultsCount=>"All")
     Text
@@ -190,7 +194,7 @@ doc ///
       We can compare the speed of the two algorithms with an example of fixing
       the Hilbert polynomial to be $3d^2-6d+175$ in a ring with $6$ variables.
       Because there is no upper bound for $h_{S/I}$, both algorithms give valid
-      results.
+      results, and smallest possible upper bounds.
     CannedExample
       i27 : p = HilbertPolynomial => 3*d^2-6*d+175;
 

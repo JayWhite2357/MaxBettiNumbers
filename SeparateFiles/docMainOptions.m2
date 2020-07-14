@@ -69,7 +69,7 @@ doc ///
       {TT"\"AllMaxBettiSum\"",TEX" - Returns the Hilbert functions of all ",
       "ideals that have the maximum possible sum of the total Betti numbers."},
       {TT"\"All\"",TEX" - Returns the Hilbert functions of all ideals that ",
-      "have maximal Betti numbers."}}@
+      "have maximal total Betti numbers."}}@
   SeeAlso
     maxBettiNumbers
     MaxBetti

@@ -3,7 +3,7 @@ doc ///
     lexBetti
     (lexBetti, ZZ, List)
   Headline
-    Betti numbers of a lexsegment ideal.
+    Graded Betti numbers of a lexsegment ideal.
   Usage
     lexBetti (N, h)
   Inputs
@@ -18,8 +18,8 @@ doc ///
       Betti numbers that are at least as large as those of any other ideal with
       that hilbert function.
     
-      This function returns the Betti numbers of a lexsegment ideal with the
-      given Hilbert function. Note, because only the truncated version of a
+      This function returns the graded Betti numbers of a lexsegment ideal with
+      the given Hilbert function. Note, because only the truncated version of a
       Hilbert function can be represented by a list, the Hilbert function is
       assumed to continue as if it matches its polynomial by the end of the
       list. In other words, the lexsegment ideal has no generators with degree
@@ -37,7 +37,7 @@ doc ///
     almostLexBetti
     (almostLexBetti, ZZ, List)
   Headline
-    Betti numbers of an almost lexsegment ideal.
+    Graded Betti numbers of an almost lexsegment ideal.
   Usage
     almostLexBetti (N, h)
   Inputs
@@ -54,8 +54,8 @@ doc ///
       Betti numbers that are at least as large as those of any other saturated
       ideal with that hilbert function.
     
-      This function returns the Betti numbers of an almost lexsegment ideal with
-      the given Hilbert function. Note, because only the truncated version of a
+      This function returns the graded Betti numbers of an almost lexsegment
+      ideal with the given Hilbert function. Note, because only the truncated version of a
       Hilbert function can be represented by a list, the Hilbert function is
       assumed to continue as if it matches its polynomial by the end of the
       list. In other words, the almost lexsegment ideal has no generators with
