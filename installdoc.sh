@@ -1,4 +1,4 @@
-cd ~/maxbetti/
+cd $(dirname "$0")
 rm -r ./docs/
 mkdir ./docs/
 cp -r ~/.Macaulay2/local/share/doc/Macaulay2/MaxBettiNumbers/html/* ./docs/
