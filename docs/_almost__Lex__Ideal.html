@@ -33,7 +33,8 @@
 </div>
 <div class="single"><h2>Description</h2>
 <div><div><p>Consider a polynomial ring in <tt>N</tt> variables. For any hilbert function of a saturated ideal there is a unique almost lexsegment ideal. An almost lexsegment ideal is an ideal that is lexsegment in <tt>N-1</tt> variables. Furthermore, this almost lexsegment ideal is saturated and has graded Betti numbers that are at least as large as those of any other saturated ideal with that hilbert function.</p>
-<p>This function returns the almost lexsegment ideal with the given Hilbert function. Note, because only the truncated version of a Hilbert function can be represented by a list, the Hilbert function is assumed to continue as if it matches its polynomial by the end of the list. In other words, the almost lexsegment ideal has no generators with degree larger than <tt>#h-1</tt>.</p>
+<p>The Hilbert function of a lexsegment ideal is determined by the values in the degrees that are at and below the largest degree of any generator. As a result, it makes sense to specify the Hilbert function through the largest degree of a generator and then truncate the rest of the function. This also applies to almost lexsegment ideals since they are simply lexsegment ideals in a smaller ring.</p>
+<p>This function returns the almost lexsegment ideal with the given Hilbert function.</p>
 </div>
 <table class="examples"><tr><td><pre>i1 : lexsegmentIdeal (QQ[x_1..x_4], {1,2,3,3,3,3})
 

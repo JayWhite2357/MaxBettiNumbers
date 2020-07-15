@@ -17,13 +17,14 @@ doc ///
       there is a unique lexsegment ideal. Furthermore, this ideal has graded
       Betti numbers that are at least as large as those of any other ideal with
       that hilbert function.
+      
+      The Hilbert function of a lexsegment ideal is determined by the values in
+      the degrees that are at and below the largest degree of any generator. As
+      a result, it makes sense to specify the Hilbert function through the
+      largest degree of a generator and then truncate the rest of the function.
     
       This function returns the graded Betti numbers of a lexsegment ideal with
-      the given Hilbert function. Note, because only the truncated version of a
-      Hilbert function can be represented by a list, the Hilbert function is
-      assumed to continue as if it matches its polynomial by the end of the
-      list. In other words, the lexsegment ideal has no generators with degree
-      larger than @TT"#h-1"@.
+      the given, tuncated, Hilbert function.
     Example
       lexBetti (4, {1,2,3,3,3,3})
       lexBetti (4, {1,2,3,3,3,3,0})
@@ -54,12 +55,15 @@ doc ///
       Betti numbers that are at least as large as those of any other saturated
       ideal with that hilbert function.
     
+      The Hilbert function of a lexsegment ideal is determined by the values in
+      the degrees that are at and below the largest degree of any generator. As
+      a result, it makes sense to specify the Hilbert function through the
+      largest degree of a generator and then truncate the rest of the function.
+      This also applies to almost lexsegment ideals since they are simply
+      lexsegment ideals in a smaller ring.
+    
       This function returns the graded Betti numbers of an almost lexsegment
-      ideal with the given Hilbert function. Note, because only the truncated version of a
-      Hilbert function can be represented by a list, the Hilbert function is
-      assumed to continue as if it matches its polynomial by the end of the
-      list. In other words, the almost lexsegment ideal has no generators with
-      degree larger than @TT"#h-1"@.
+      ideal with the given Hilbert function.
     Example
       lexBetti (4, {1,2,3,3,3,3})
       almostLexBetti (5, {1,3,6,9,12,15})
@@ -112,6 +116,11 @@ doc ///
       Betti numbers that are at least as large as those of any other ideal with
       that hilbert function.
     
+      The Hilbert function of a lexsegment ideal is determined by the values in
+      the degrees that are at and below the largest degree of any generator. As
+      a result, it makes sense to specify the Hilbert function through the
+      largest degree of a generator and then truncate the rest of the function.
+    
       This function returns the lexsegment ideal with the given Hilbert
       function. Note, because only the truncated version of a Hilbert function
       can be represented by a list, the Hilbert function is assumed to continue
@@ -150,12 +159,15 @@ doc ///
       Betti numbers that are at least as large as those of any other saturated
       ideal with that hilbert function.
     
+      The Hilbert function of a lexsegment ideal is determined by the values in
+      the degrees that are at and below the largest degree of any generator. As
+      a result, it makes sense to specify the Hilbert function through the
+      largest degree of a generator and then truncate the rest of the function.
+      This also applies to almost lexsegment ideals since they are simply
+      lexsegment ideals in a smaller ring.
+    
       This function returns the almost lexsegment ideal with the given Hilbert
-      function. Note, because only the truncated version of a Hilbert function
-      can be represented by a list, the Hilbert function is assumed to continue
-      as if it matches its polynomial by the end of the list. In other words,
-      the almost lexsegment ideal has no generators with degree larger than
-      @TT"#h-1"@.
+      function.
     Example
       lexsegmentIdeal (QQ[x_1..x_4], {1,2,3,3,3,3})
       almostLexIdeal (QQ[x_1..x_5], {1,3,6,9,12,15})

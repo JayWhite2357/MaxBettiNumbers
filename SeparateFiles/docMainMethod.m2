@@ -44,8 +44,14 @@ doc ///
       Consider a polynomial ring, $S$, in @TT"N"@ variables.
       Consider the family of saturated ideals, $I\subset S$, satisfying the
       following constraints. (Note: $h_{S/I}$ will denote the hilbert function
-      of $I$, and $\Delta$ will denote the difference operator. (i.e.
+      of $S/I$, and $\Delta$ will denote the difference operator. (i.e.
       $\Delta h_{S/I}(d)=h_{S/I}(d)-h_{S/I}(d-1)$.)
+      
+      The function $G$, $F$, $g$, $f$, and $p$ are arguments to method. In the
+      case where the value is not given, the corresponding constraint is
+      removed (i.e. made the trivial constraint). Note: $F$ and $G$
+      must be equal for large degrees. This is implied, and does not need to be
+      explicit if $p$ is specified.
       
       @UL{TEX"$G(d)\\leq h_{S/I}(d)\\leq F(d)$ for all $d$",
       TEX"$g(d)\\leq\\Delta h_{S/I}(d)\\leq f(d)$ for all $d$",
