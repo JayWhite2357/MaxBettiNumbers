@@ -3,7 +3,7 @@
 
 [Documentation page for this package](https://jaywhite2357.github.io/maxbetti/index.html)
 
-The package can be found [here (MaxBettiNumbers.m2)](./MaxBettiNumbers.m2), or on the documentation page above.
+The package can be found in the top directory, [here: (MaxBettiNumbers.m2)](https://jaywhite2357.github.io/maxbetti/MaxBettiNumbers.m2), or on the documentation page above.
 
 Note: the file MaxBettiNumbers.m2 in the top directory is the completed package. The folder docs/ is so that the documentation is easily viewable via a webpage.
 
