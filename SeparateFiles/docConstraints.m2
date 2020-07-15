@@ -16,7 +16,7 @@ doc ///
       integers starting at degree 0.
       In the case where a value is not given, the corresponding constraint is
       removed (i.e. made the trivial constraint).
-      Note: if @TO HilbertPolynomial@ is not specified
+      Note: if @TO HilbertPolynomial@ is not specified,
       @TT"HilbertFunctionLowerBound"@ and @TT"HilbertFunctionUpperBound"@
        must be equal for large degrees.
 
@@ -51,7 +51,7 @@ doc ///
       @TO maxBettiNumbers@.
       In the case where a value is not given, the corresponding constraint is
       removed (i.e. made the trivial constraint).
-      Note: if @TO HilbertPolynomial@ is not specified
+      Note: if @TT"HilbertPolynomial"@ is not specified,
       @TO HilbertFunctionLowerBound@ and  @TO HilbertFunctionUpperBound@
        must be equal for large degrees.
        
