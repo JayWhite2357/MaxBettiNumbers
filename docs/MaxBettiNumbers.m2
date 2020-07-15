@@ -1230,23 +1230,20 @@ doc ///
     [maxBettiNumbers, HilbertDifferenceUpperBound]
   Description
     Text
-      The functions @TT"HilbertFunctionLowerBound"@,
+      The options @TT"HilbertFunctionLowerBound"@,
       @TT"HilbertFunctionUpperBound"@,
       @TT"HilbertFunctionLowerBound"@,
       @TT"HilbertDifferenceLowerBound"@, and
       @TO HilbertPolynomial@ are arguments to 
       @TO maxBettiNumbers@.
+      Each of these options, other than @TO HilbertPolynomial@, are a list of
+      integers starting at degree 0.
       In the case where a value is not given, the corresponding constraint is
       removed (i.e. made the trivial constraint).
       Note: if @TO HilbertPolynomial@ is not specified
       @TT"HilbertFunctionLowerBound"@ and @TT"HilbertFunctionUpperBound"@
        must be equal for large degrees.
 
-      Each of these options is a list of integers starting at degree 0.
-      The bounds set by @TT"HilbertFunctionLowerBound"@ and
-      @TT"HilbertFunctionUpperBound"@ must match at large degrees, or at least
-      force a condition where they match.
-      
       In the case where no lower
       bound is desired at a specified degree, @TT"0"@, @TT"null"@, or nothing
       can be put instead. For instance, to specify only a lower bound of @TT"4"@
@@ -1260,15 +1257,7 @@ doc ///
       @TT"HilbertFunctionUpperBound=>{,,,4}"@ can be used.
       
       There are some instances when these options, along with
-      @TO HilbertPolynomial@ conflict. In this case, an error is thrown.
-      
-      In the case where the @TO HilbertPolynomial@ option is not supplied,
-      the family of ideals that
-      is searched has no direct restriction on the Hilbert polynomial.
-      However, because the upper and lower bounds on the Hilbert function
-      are required to match for large degrees, there is always at least an
-      implicit constraint.
-      
+      @TO HilbertPolynomial@ conflict. In this case, an error is raised.      
   SeeAlso
     maxBettiNumbers
     [maxBettiNumbers, HilbertPolynomial]
@@ -1290,12 +1279,8 @@ doc ///
       @TO HilbertFunctionLowerBound@ and  @TO HilbertFunctionUpperBound@
        must be equal for large degrees.
        
-      This option can be either a @TO RingElement@ or an integer.
-      In the case where this option is not supplied, the family of ideals that
-      is searched has no direct restriction on the Hilbert polynomial.
-      However, because the upper and lower bounds on the Hilbert function
-      are required to match for large degrees, there is always at least an
-      implicit constraint. In the case where this conflicts with the bounds on
+      This option can be either a @TO RingElement@ or an integer. In the case
+      where this conflicts with the bounds on
       the Hilbert functions, an error is raised.
   SeeAlso
     maxBettiNumbers
