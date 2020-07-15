@@ -34,7 +34,7 @@
 <div class="single"><h2>Description</h2>
 <div><div><p>Consider a polynomial ring in <tt>N</tt> variables. For any hilbert function, there is a unique lexsegment ideal. Furthermore, this ideal has graded Betti numbers that are at least as large as those of any other ideal with that hilbert function.</p>
 <p>The Hilbert function of a lexsegment ideal is determined by the values in the degrees that are at and below the largest degree of any generator. As a result, it makes sense to specify the Hilbert function through the largest degree of a generator and then truncate the rest of the function.</p>
-<p>This function returns the lexsegment ideal with the given Hilbert function. Note, because only the truncated version of a Hilbert function can be represented by a list, the Hilbert function is assumed to continue as if it matches its polynomial by the end of the list. In other words, the lexsegment ideal has no generators with degree larger than <tt>#h-1</tt>.</p>
+<p>This function returns the lexsegment ideal with the given Hilbert function.</p>
 <p>Note: this method is significantly faster than the similar <tt>lexIdeal</tt> from the package <tt>LexIdeals</tt>.</p>
 </div>
 <table class="examples"><tr><td><pre>i1 : lexsegmentIdeal (QQ[x_1..x_4], {1,2,3,3,3,3})

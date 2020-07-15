@@ -122,10 +122,7 @@ doc ///
       largest degree of a generator and then truncate the rest of the function.
     
       This function returns the lexsegment ideal with the given Hilbert
-      function. Note, because only the truncated version of a Hilbert function
-      can be represented by a list, the Hilbert function is assumed to continue
-      as if it matches its polynomial by the end of the list. In other words,
-      the lexsegment ideal has no generators with degree larger than @TT"#h-1"@.
+      function.
       
       Note: this method is significantly faster than the similar @TT"lexIdeal"@
       from the package @TT"LexIdeals"@.

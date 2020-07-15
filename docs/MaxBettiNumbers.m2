@@ -1005,11 +1005,10 @@ doc ///
       of $S/I$, and $\Delta$ will denote the difference operator. (i.e.
       $\Delta h_{S/I}(d)=h_{S/I}(d)-h_{S/I}(d-1)$.)
       
-      The function $G$, $F$, $g$, $f$, and $p$ are arguments to method. In the
-      case where the value is not given, the corresponding constraint is
-      removed (i.e. made the trivial constraint). Note: $F$ and $G$
-      must be equal for large degrees. This is implied, and does not need to be
-      explicit if $p$ is specified.
+      The functions $G$, $F$, $g$, $f$, and $p$ are arguments to the method.
+      In the case where a value is not given, the corresponding constraint is
+      removed (i.e. made the trivial constraint). Note: if $p$ is not specified
+      $F$ and $G$ must be equal for large degrees.
       
       @UL{TEX"$G(d)\\leq h_{S/I}(d)\\leq F(d)$ for all $d$",
       TEX"$g(d)\\leq\\Delta h_{S/I}(d)\\leq f(d)$ for all $d$",
@@ -1231,6 +1230,18 @@ doc ///
     [maxBettiNumbers, HilbertDifferenceUpperBound]
   Description
     Text
+      The functions @TT"HilbertFunctionLowerBound"@,
+      @TT"HilbertFunctionUpperBound"@,
+      @TT"HilbertFunctionLowerBound"@,
+      @TT"HilbertDifferenceLowerBound"@, and
+      @TO HilbertPolynomial@ are arguments to 
+      @TO maxBettiNumbers@.
+      In the case where a value is not given, the corresponding constraint is
+      removed (i.e. made the trivial constraint).
+      Note: if @TO HilbertPolynomial@ is not specified
+      @TT"HilbertFunctionLowerBound"@ and @TT"HilbertFunctionUpperBound"@
+       must be equal for large degrees.
+
       Each of these options is a list of integers starting at degree 0.
       The bounds set by @TT"HilbertFunctionLowerBound"@ and
       @TT"HilbertFunctionUpperBound"@ must match at large degrees, or at least
@@ -1267,6 +1278,18 @@ doc ///
     [maxBettiNumbers, HilbertPolynomial]
   Description
     Text
+      The functions @TO HilbertFunctionLowerBound@,
+      @TO HilbertFunctionUpperBound@,
+      @TO HilbertFunctionLowerBound@,
+      @TO HilbertDifferenceLowerBound@, and
+      @TT"HilbertPolynomial"@ are arguments to 
+      @TO maxBettiNumbers@.
+      In the case where a value is not given, the corresponding constraint is
+      removed (i.e. made the trivial constraint).
+      Note: if @TO HilbertPolynomial@ is not specified
+      @TO HilbertFunctionLowerBound@ and  @TO HilbertFunctionUpperBound@
+       must be equal for large degrees.
+       
       This option can be either a @TO RingElement@ or an integer.
       In the case where this option is not supplied, the family of ideals that
       is searched has no direct restriction on the Hilbert polynomial.
@@ -1402,10 +1425,7 @@ doc ///
       largest degree of a generator and then truncate the rest of the function.
     
       This function returns the lexsegment ideal with the given Hilbert
-      function. Note, because only the truncated version of a Hilbert function
-      can be represented by a list, the Hilbert function is assumed to continue
-      as if it matches its polynomial by the end of the list. In other words,
-      the lexsegment ideal has no generators with degree larger than @TT"#h-1"@.
+      function.
       
       Note: this method is significantly faster than the similar @TT"lexIdeal"@
       from the package @TT"LexIdeals"@.

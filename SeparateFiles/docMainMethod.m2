@@ -47,11 +47,10 @@ doc ///
       of $S/I$, and $\Delta$ will denote the difference operator. (i.e.
       $\Delta h_{S/I}(d)=h_{S/I}(d)-h_{S/I}(d-1)$.)
       
-      The function $G$, $F$, $g$, $f$, and $p$ are arguments to method. In the
-      case where the value is not given, the corresponding constraint is
-      removed (i.e. made the trivial constraint). Note: $F$ and $G$
-      must be equal for large degrees. This is implied, and does not need to be
-      explicit if $p$ is specified.
+      The functions $G$, $F$, $g$, $f$, and $p$ are arguments to the method.
+      In the case where a value is not given, the corresponding constraint is
+      removed (i.e. made the trivial constraint). Note: if $p$ is not specified
+      $F$ and $G$ must be equal for large degrees.
       
       @UL{TEX"$G(d)\\leq h_{S/I}(d)\\leq F(d)$ for all $d$",
       TEX"$g(d)\\leq\\Delta h_{S/I}(d)\\leq f(d)$ for all $d$",

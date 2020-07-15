@@ -6,6 +6,18 @@ doc ///
     [maxBettiNumbers, HilbertDifferenceUpperBound]
   Description
     Text
+      The functions @TT"HilbertFunctionLowerBound"@,
+      @TT"HilbertFunctionUpperBound"@,
+      @TT"HilbertFunctionLowerBound"@,
+      @TT"HilbertDifferenceLowerBound"@, and
+      @TO HilbertPolynomial@ are arguments to 
+      @TO maxBettiNumbers@.
+      In the case where a value is not given, the corresponding constraint is
+      removed (i.e. made the trivial constraint).
+      Note: if @TO HilbertPolynomial@ is not specified
+      @TT"HilbertFunctionLowerBound"@ and @TT"HilbertFunctionUpperBound"@
+       must be equal for large degrees.
+
       Each of these options is a list of integers starting at degree 0.
       The bounds set by @TT"HilbertFunctionLowerBound"@ and
       @TT"HilbertFunctionUpperBound"@ must match at large degrees, or at least
@@ -42,6 +54,18 @@ doc ///
     [maxBettiNumbers, HilbertPolynomial]
   Description
     Text
+      The functions @TO HilbertFunctionLowerBound@,
+      @TO HilbertFunctionUpperBound@,
+      @TO HilbertFunctionLowerBound@,
+      @TO HilbertDifferenceLowerBound@, and
+      @TT"HilbertPolynomial"@ are arguments to 
+      @TO maxBettiNumbers@.
+      In the case where a value is not given, the corresponding constraint is
+      removed (i.e. made the trivial constraint).
+      Note: if @TO HilbertPolynomial@ is not specified
+      @TO HilbertFunctionLowerBound@ and  @TO HilbertFunctionUpperBound@
+       must be equal for large degrees.
+       
       This option can be either a @TO RingElement@ or an integer.
       In the case where this option is not supplied, the family of ideals that
       is searched has no direct restriction on the Hilbert polynomial.
