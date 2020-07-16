@@ -1,7 +1,7 @@
 lexBetti = method( Options => {
   AsTally => true
 } );
---Computes the betti numbers of the lex ideal with the given hilbert function.
+-- Computes the betti numbers of the lex ideal with the given hilbert function.
 lexBetti (ZZ, List) := o -> (numberOfVariables, h) -> (
   n := numberOfVariables - 1;
   result := lexBettiNum(h, n);
@@ -57,7 +57,7 @@ lexBettiNum = (h, n) -> (
 );
 
 
-
+-- Note: n is one less than the number of variables.
 lexsegmentIdealHelper = (S, h, n) -> (
   if not h#?0 then return ideal 0_S else if h#0 === 0 then return ideal 1_S;
   if h#0 > 1 or min(h)<0 then error("Not a valid Hilbert function.");
@@ -102,6 +102,3 @@ lexsegmentIdeal (PolynomialRing, List) := (S, h) ->
 almostLexIdeal = method( TypicalValue => Ideal );
 almostLexIdeal (PolynomialRing, List) := (S, h) -> 
   lexsegmentIdealHelper(S, h - prepend(0,drop(h,-1)), dim S - 2);
-
---loadPackage("MaxBettiNumbers", Reload=>true)
---lexsegmentIdeal (QQ[x_1..x_5], {1,4,9,2})

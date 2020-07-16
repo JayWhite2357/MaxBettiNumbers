@@ -789,7 +789,7 @@ lexBettiNum = (h, n) -> (
 );
 
 
-
+-- Note: n is one less than the number of variables.
 lexsegmentIdealHelper = (S, h, n) -> (
   if not h#?0 then return ideal 0_S else if h#0 === 0 then return ideal 1_S;
   if h#0 > 1 or min(h)<0 then error("Not a valid Hilbert function.");
@@ -1644,6 +1644,33 @@ doc ///
       @TO lexBetti@ and @TO lexsegmentIdeal@ use the same code, and are exported
       from the package in hopes that they are useful. These functions are
       written with a concern for speed and efficiency.
+///
+doc ///
+  Key
+    "Large Example"
+  Description
+    Example
+      N = 5;
+      g = HilbertDifferenceLowerBound => {,,,8,8,5,5};
+      G = HilbertFunctionLowerBound => {,,,,,,41};
+      F = HilbertFunctionUpperBound => {,,,,,,41};
+      p = HilbertPolynomial => 49;
+      maxBettiNumbers(N,p,g,G,F)
+      maxBettiNumbers(N,p,g,G,F, ResultsCount=>"One")
+      maxBettiNumbers(N,p,g,G,F, ResultsCount=>"AllMaxBettiSum")
+      maxBettiNumbers(N,p,g,G,F, ResultsCount=>"All")
+      almostLexBetti(N, last o9.HilbertFunctions)
+      almostLexIdeal(QQ[x_1..x_N], last o9.HilbertFunctions)
+      maxBettiNumbers(N,p,g,G,F, Algorithm=>"Simplified", ResultsCount=>"One")
+      N = 6;
+      QQ[i]; p = HilbertPolynomial => 3*i^2-6*i+175;
+      time maxBettiNumbers(N, p, Algorithm=>"Simplified", ResultsCount=>"None");
+      time maxBettiNumbers(N, p, Algorithm=>"Simplified", ResultsCount=>"All");
+      time maxBettiNumbers(N, p, Algorithm=>"Complete", ResultsCount=>"None");
+      time maxBettiNumbers(N, p, Algorithm=>"Complete", ResultsCount=>"All");
+      loadPackage "StronglyStableIdeals"
+      benchmark("maxBettiNumbers(5, HilbertPolynomial => 25)")
+      benchmark("stronglyStableIdeals(25, 5)")
 ///
 
 --------------------------------------------------------------------------------

@@ -1,8 +1,9 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd $DIR
+cd ~/Downloads
 rm -r ./docs/
 mkdir ./docs/
 cp -r ~/.Macaulay2/local/share/doc/Macaulay2/MaxBettiNumbers/html/* ./docs/
+cp -r ~/.Macaulay2/local/share/doc/Macaulay2/MaxBettiNumbers/ ./
 cp /usr/share/Macaulay2/Style/doc.css ./docs/
 cp MaxBettiNumbers.m2 ./docs/
 find ./docs/ -type f -exec sed -i 's/\/usr\/share\/Macaulay2\/Style\/doc.css/doc.css/g' {} \;
