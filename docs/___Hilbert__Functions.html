@@ -1,42 +1,53 @@
-<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
-<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head><title>HilbertFunctions</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" type="text/css" href="doc.css"/>
-</head>
-<body>
-<table class="buttons">
-  <tr>
-    <td><div><a href="___Hilbert__Function__Upper__Bound.html">next</a> | <a href="___Hilbert__Function__Lower__Bound.html">previous</a> | <a href="___Hilbert__Function__Upper__Bound.html">forward</a> | <a href="___Hilbert__Function__Lower__Bound.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
+  <head>
+    <title>HilbertFunctions</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <link type="text/css" rel="stylesheet" href="doc.css"/>
+  </head>
+  <body>
+    <table class="buttons">
+      <tr>
+        <td>
+          <div>
+<a href="___Hilbert__Function__Upper__Bound.html">next</a> | <a href="___Hilbert__Function__Lower__Bound.html">previous</a> | <a href="___Hilbert__Function__Upper__Bound.html">forward</a> | <a href="___Hilbert__Function__Lower__Bound.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
+<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="___Hilbert__Functions.html" title="">HilbertFunctions</a>    </div>
+    <hr/>
+    <div>
+      <h1>HilbertFunctions</h1>
+      <div>
+        <h2>Description</h2>
+        <div>
+          <p>Used as a key in <a href="___Max__Betti.html" title="">MaxBetti</a> with value being a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Vertical__List.html" title="a type of visible self-initializing list that prints vertically">VerticalList</a>. A list of truncated Hilbert functions returned by <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a>. See <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a> for more details.</p>
+        </div>
+      </div>
+      <div>
+        <h2>Caveat</h2>
+        <div>
+          <p>If <tt>Algorithm=>&quot;Simplified&quot;</tt> is forced, this may not return valid Hilbert functions for some inputs.</p>
+        </div>
+      </div>
+      <div>
+        <h2>See also</h2>
+        <ul>
+          <li>
+<span><a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a></span>          </li>
+          <li>
+<span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span>          </li>
+          <li>
+<span><a href="___Max__Betti.html" title="">MaxBetti</a></span>          </li>
+        </ul>
+      </div>
+      <div class="waystouse">
+        <h2>For the programmer</h2>
+        <p>The object <a href="___Hilbert__Functions.html" title="">HilbertFunctions</a> is <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Symbol.html">symbol</a></span>.</p>
+      </div>
+    </div>
+  </body>
 
-    </td>
-  </tr>
-</table>
-<div><a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="___Hilbert__Functions.html" title="">HilbertFunctions</a></div>
-<hr/>
-<div><h1>HilbertFunctions</h1>
-<div class="single"><h2>Description</h2>
-<div><div><p>Used as a key in <a href="___Max__Betti.html" title="">MaxBetti</a> with value being a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Vertical__List.html" title="a type of visible self-initializing list that prints vertically">VerticalList</a>. A list of truncated Hilbert functions returned by <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a>. See <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a> for more details.</p>
-</div>
-</div>
-</div>
-<div class="single"><h2>Caveat</h2>
-<div><div><p>If <tt>Algorithm=>&quot;Simplified&quot;</tt> is forced, this may not return valid Hilbert functions for some inputs.</p>
-</div>
-</div>
-</div>
-<div class="single"><h2>See also</h2>
-<ul><li><span><a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a></span></li>
-<li><span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span></li>
-<li><span><a href="___Max__Betti.html" title="">MaxBetti</a></span></li>
-</ul>
-</div>
-<div class="waystouse"><h2>For the programmer</h2>
-<p>The object <a href="___Hilbert__Functions.html" title="">HilbertFunctions</a> is <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Symbol.html">symbol</a></span>.</p>
-</div>
-</div>
-</body>
 </html>
-

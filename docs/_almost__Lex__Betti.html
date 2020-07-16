@@ -1,42 +1,61 @@
-<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
-<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head><title>almostLexBetti -- Graded Betti numbers of an almost lexsegment ideal.</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" type="text/css" href="doc.css"/>
-</head>
-<body>
-<table class="buttons">
-  <tr>
-    <td><div><a href="_almost__Lex__Ideal.html">next</a> | <a href="index.html">previous</a> | <a href="_almost__Lex__Ideal.html">forward</a> | <a href="index.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
-
-    </td>
-  </tr>
-</table>
-<div><a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a></div>
-<hr/>
-<div><h1>almostLexBetti -- Graded Betti numbers of an almost lexsegment ideal.</h1>
-<div class="single"><h2>Synopsis</h2>
-<ul><li><dl class="element"><dt>Usage: </dt><dd><tt>almostLexBetti (N, h)</tt></dd></dl>
-</li>
-<li><div class="single">Inputs:<ul><li><span><tt>N</tt>, <span>an <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Z__Z.html">integer</a></span>, the number of variables in the ambient polynomial ring.</span></li>
-<li><span><tt>h</tt>, <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, the Hilbert function of the almost lexsegment ideal.</span></li>
-</ul>
-</div>
-</li>
-<li><div class="single"><a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/_using_spfunctions_spwith_spoptional_spinputs.html">Optional inputs</a>:<ul><li><span><a href="_lex__Betti_lp..._cm_sp__As__Tally_sp_eq_gt_sp..._rp.html">AsTally => ...</a>, </span></li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="single"><h2>Description</h2>
-<div><div><p>Consider a polynomial ring in <tt>N</tt> variables. For any hilbert function of a saturated ideal there is a unique almost lexsegment ideal. An almost lexsegment ideal is an ideal that is lexsegment in <tt>N-1</tt> variables. Furthermore, this almost lexsegment ideal is saturated and has graded Betti numbers that are at least as large as those of any other saturated ideal with that hilbert function.</p>
-<p>The Hilbert function of a lexsegment ideal is determined by the values in the degrees that are at and below the largest degree of any generator. As a result, it makes sense to specify the Hilbert function through the largest degree of a generator and then truncate the rest of the function. This also applies to almost lexsegment ideals since they are simply lexsegment ideals in a smaller ring.</p>
-<p>This function returns the graded Betti numbers of an almost lexsegment ideal with the given Hilbert function.</p>
-</div>
-<table class="examples"><tr><td><pre>i1 : lexBetti (4, {1,2,3,3,3,3})
+  <head>
+    <title>almostLexBetti -- Graded Betti numbers of an almost lexsegment ideal.</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <link type="text/css" rel="stylesheet" href="doc.css"/>
+  </head>
+  <body>
+    <table class="buttons">
+      <tr>
+        <td>
+          <div>
+<a href="_almost__Lex__Ideal.html">next</a> | <a href="index.html">previous</a> | <a href="_almost__Lex__Ideal.html">forward</a> | <a href="index.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
+<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a>    </div>
+    <hr/>
+    <div>
+      <h1>almostLexBetti -- Graded Betti numbers of an almost lexsegment ideal.</h1>
+      <div>
+        <h2>Synopsis</h2>
+        <ul>
+          <li>
+            <dl class="element">
+              <dt>Usage: </dt>
+              <dd><tt>almostLexBetti (N, h)</tt></dd>
+            </dl>
+          </li>
+          <li>
+Inputs:            <ul>
+              <li>
+<span><tt>N</tt>, <span>an <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Z__Z.html">integer</a></span>, the number of variables in the ambient polynomial ring.</span>              </li>
+              <li>
+<span><tt>h</tt>, <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, the Hilbert function of the almost lexsegment ideal.</span>              </li>
+            </ul>
+          </li>
+          <li>
+<a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/_using_spfunctions_spwith_spoptional_spinputs.html">Optional inputs</a>:            <ul>
+              <li>
+<span><a href="_lex__Betti_lp..._cm_sp__As__Tally_sp_eq_gt_sp..._rp.html">AsTally => ...</a>, </span>              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h2>Description</h2>
+        <div>
+          <p>Consider a polynomial ring in <tt>N</tt> variables. For any hilbert function of a saturated ideal there is a unique almost lexsegment ideal. An almost lexsegment ideal is an ideal that is lexsegment in <tt>N-1</tt> variables. Furthermore, this almost lexsegment ideal is saturated and has graded Betti numbers that are at least as large as those of any other saturated ideal with that hilbert function.</p>
+          <p>The Hilbert function of a lexsegment ideal is determined by the values in the degrees that are at and below the largest degree of any generator. As a result, it makes sense to specify the Hilbert function through the largest degree of a generator and then truncate the rest of the function. This also applies to almost lexsegment ideals since they are simply lexsegment ideals in a smaller ring.</p>
+          <p>This function returns the graded Betti numbers of an almost lexsegment ideal with the given Hilbert function.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i1 : lexBetti (4, {1,2,3,3,3,3})
 
             0 1 2 3
 o1 = total: 1 3 3 1
@@ -45,8 +64,11 @@ o1 = total: 1 3 3 1
          2: . 1 2 1
 
 o1 : BettiTally</pre>
-</td></tr>
-<tr><td><pre>i2 : almostLexBetti (5, {1,3,6,9,12,15})
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i2 : almostLexBetti (5, {1,3,6,9,12,15})
 
             0 1 2 3
 o2 = total: 1 3 3 1
@@ -55,8 +77,11 @@ o2 = total: 1 3 3 1
          2: . 1 2 1
 
 o2 : BettiTally</pre>
-</td></tr>
-<tr><td><pre>i3 : lexBetti (4, {1,2,3,3,3,3,0})
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i3 : lexBetti (4, {1,2,3,3,3,3,0})
 
             0 1  2  3 4
 o3 = total: 1 6 12 10 3
@@ -68,8 +93,11 @@ o3 = total: 1 6 12 10 3
          5: . 3  9  9 3
 
 o3 : BettiTally</pre>
-</td></tr>
-<tr><td><pre>i4 : almostLexBetti (5, {1,3,6,9,12,15,15})
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i4 : almostLexBetti (5, {1,3,6,9,12,15,15})
 
             0 1  2  3 4
 o4 = total: 1 6 12 10 3
@@ -81,36 +109,49 @@ o4 = total: 1 6 12 10 3
          5: . 3  9  9 3
 
 o4 : BettiTally</pre>
-</td></tr>
-<tr><td><pre>i5 : lexBetti (5, {1,5,15,35})
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i5 : lexBetti (5, {1,5,15,35})
 
             0
 o5 = total: 1
          0: 1
 
 o5 : BettiTally</pre>
-</td></tr>
-<tr><td><pre>i6 : almostLexBetti (6, {1,6,21,56})
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i6 : almostLexBetti (6, {1,6,21,56})
 
             0
 o6 = total: 1
          0: 1
 
 o6 : BettiTally</pre>
-</td></tr>
-</table>
-</div>
-</div>
-<div class="single"><h2>See also</h2>
-<ul><li><span><a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> -- Create an almost lexsegment ideal.</span></li>
-<li><span><a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> -- Graded Betti numbers of a lexsegment ideal.</span></li>
-</ul>
-</div>
-<div class="waystouse"><h2>Ways to use <tt>almostLexBetti</tt> :</h2>
-<ul><li>almostLexBetti(ZZ,List)</li>
-</ul>
-</div>
-</div>
-</body>
-</html>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <h2>See also</h2>
+        <ul>
+          <li>
+<span><a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> -- Create an almost lexsegment ideal.</span>          </li>
+          <li>
+<span><a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> -- Graded Betti numbers of a lexsegment ideal.</span>          </li>
+        </ul>
+      </div>
+      <div class="waystouse">
+        <h2>Ways to use <tt>almostLexBetti</tt> :</h2>
+        <ul>
+          <li>
+almostLexBetti(ZZ,List)          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
 
+</html>

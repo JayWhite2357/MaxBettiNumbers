@@ -443,22 +443,28 @@ SimplifiedNone = ( G, F, g, f, V, lb ) -> (
 --------------------------------------------------------------------------------
 
 SimplifiedSome = (G, F, g, f, V, lb) -> (
-  prevmaxVDict := {V#0#0}; prevG := 0; prevF := 0; prevmaxJ := {0};
-  raveledHFs := for d to #G-1 list (
-    currmaxJ := new MutableList from G#d..F#d;
-    maxHFDict := new MutableList from G#d..F#d;
+  prevmaxVDict := { V#0#0 };
+  prevG := 0;
+  prevF := 0;
+  prevmaxJ := { 0 };
+  raveledHFs := for d to #G - 1 list (
+    currmaxJ := new MutableList from G#d .. F#d;
+    maxHFDict := new MutableList from G#d .. F#d;
     prevmaxVDict = for c from G#d to F#d list (
       maxSum := 0; maxHF := {};
-      maxV := max\transpose for j from max(g#d,c-prevF) to min(f#d,c-prevG) when prevmaxJ#(c-j-prevG)>=lb#d#(j-g#d) list (
-        currmaxJ#(c-G#d) = j;
-        newV := prevmaxVDict#(c-j-prevG) + V#d#(j-g#d);
-        if last newV === maxSum then (
-          maxHF = append(maxHF,j);
-        ) else if last newV > maxSum then (
-          maxHF = {j};
-          maxSum = last newV;
-        );
-        newV
+      maxV := max \ transpose (
+        for j from max( g#d, c - prevF ) to min( f#d, c - prevG )
+        when prevmaxJ#( c - j - prevG ) >= lb#d#( j - g#d ) list (
+          currmaxJ#( c - G#d ) = j;
+          newV := prevmaxVDict#( c - j - prevG ) + V#d#( j - g#d );
+          if last newV === maxSum then (
+            maxHF = append( maxHF, j );
+          ) else if last newV > maxSum then (
+            maxHF = { j };
+            maxSum = last newV;
+          );
+          newV
+        )
       );
       maxHFDict#(c-G#d) = maxHF;
       maxV
@@ -733,7 +739,7 @@ UnravelCompleteOne = (HFs, G, g, lb) -> (
 lexBetti = method( Options => {
   AsTally => true
 } );
---Computes the betti numbers of the lex ideal with the given hilbert function.
+-- Computes the betti numbers of the lex ideal with the given hilbert function.
 lexBetti (ZZ, List) := o -> (numberOfVariables, h) -> (
   n := numberOfVariables - 1;
   result := lexBettiNum(h, n);
@@ -834,9 +840,6 @@ lexsegmentIdeal (PolynomialRing, List) := (S, h) ->
 almostLexIdeal = method( TypicalValue => Ideal );
 almostLexIdeal (PolynomialRing, List) := (S, h) -> 
   lexsegmentIdealHelper(S, h - prepend(0,drop(h,-1)), dim S - 2);
-
---loadPackage("MaxBettiNumbers", Reload=>true)
---lexsegmentIdeal (QQ[x_1..x_5], {1,4,9,2})
 
 --------------------------------------------------------------------------------
 --- end auxillary methods

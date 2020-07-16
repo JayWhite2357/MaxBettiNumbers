@@ -1,45 +1,62 @@
-<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
-<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head><title>MaxBetti</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" type="text/css" href="doc.css"/>
-</head>
-<body>
-<table class="buttons">
-  <tr>
-    <td><div><a href="_max__Betti__Numbers.html">next</a> | <a href="_lexsegment__Ideal.html">previous</a> | <a href="_max__Betti__Numbers.html">forward</a> | <a href="_lexsegment__Ideal.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
+  <head>
+    <title>MaxBetti</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <link type="text/css" rel="stylesheet" href="doc.css"/>
+  </head>
+  <body>
+    <table class="buttons">
+      <tr>
+        <td>
+          <div>
+<a href="_max__Betti__Numbers.html">next</a> | <a href="_lexsegment__Ideal.html">previous</a> | <a href="_max__Betti__Numbers.html">forward</a> | <a href="_lexsegment__Ideal.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
+<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="___Max__Betti.html" title="">MaxBetti</a>    </div>
+    <hr/>
+    <div>
+      <h1>MaxBetti</h1>
+      <div>
+        <h2>Description</h2>
+        <div>
+          <p>This is the type that is returned by <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> it is a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Hash__Table.html" title="the class of all hash tables">HashTable</a> with the following keys.</p>
+          <ul>
+            <li>
+<a href="___Betti__Upper__Bound.html" title="">BettiUpperBound</a> - upper bound for the total Betti numbers.            </li>
+            <li>
+<a href="___Hilbert__Functions.html" title="">HilbertFunctions</a> - a list of  Hilbert functions with maximal total Betti numbers. See <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a> for more details.            </li>
+            <li>
+<a href="_is__Realizable.html" title="">isRealizable</a> - if there is an ideal with the upper bound as its total Betti numbers.            </li>
+            <li>
+<a href="___Maximal__Betti__Numbers.html" title="">MaximalBettiNumbers</a> - the maximal total Betti numbers.            </li>
+            <li>
+<a href="___Maximum__Betti__Sum.html" title="">MaximumBettiSum</a> - maximum sum of the total Betti numbers.            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h2>See also</h2>
+        <ul>
+          <li>
+<span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span>          </li>
+        </ul>
+      </div>
+      <div class="waystouse">
+        <h2>Functions and methods returning an object of class MaxBetti :</h2>
+        <ul>
+          <li>
+<span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span>          </li>
+        </ul>
+      </div>
+      <div class="waystouse">
+        <h2>For the programmer</h2>
+        <p>The object <a href="___Max__Betti.html" title="">MaxBetti</a> is <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Type.html">type</a></span>, with ancestor classes <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Hash__Table.html" title="the class of all hash tables">HashTable</a> &lt; <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Thing.html" title="the class of all things">Thing</a>.</p>
+      </div>
+    </div>
+  </body>
 
-    </td>
-  </tr>
-</table>
-<div><a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="___Max__Betti.html" title="">MaxBetti</a></div>
-<hr/>
-<div><h1>MaxBetti</h1>
-<div class="single"><h2>Description</h2>
-<div><div><p>This is the type that is returned by <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> it is a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Hash__Table.html" title="the class of all hash tables">HashTable</a> with the following keys.</p>
-<ul><li><a href="___Betti__Upper__Bound.html" title="">BettiUpperBound</a> - upper bound for the total Betti numbers.</li>
-<li><a href="___Hilbert__Functions.html" title="">HilbertFunctions</a> - a list of  Hilbert functions with maximal total Betti numbers. See <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a> for more details.</li>
-<li><a href="_is__Realizable.html" title="">isRealizable</a> - if there is an ideal with the upper bound as its total Betti numbers.</li>
-<li><a href="___Maximal__Betti__Numbers.html" title="">MaximalBettiNumbers</a> - the maximal total Betti numbers.</li>
-<li><a href="___Maximum__Betti__Sum.html" title="">MaximumBettiSum</a> - maximum sum of the total Betti numbers.</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="single"><h2>See also</h2>
-<ul><li><span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span></li>
-</ul>
-</div>
-<div class="waystouse"><h2>Functions and methods returning an object of class MaxBetti :</h2>
-<ul><li><span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span></li>
-</ul>
-</div>
-<div class="waystouse"><h2>For the programmer</h2>
-<p>The object <a href="___Max__Betti.html" title="">MaxBetti</a> is <span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Type.html">type</a></span>, with ancestor classes <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Hash__Table.html" title="the class of all hash tables">HashTable</a> &lt; <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Thing.html" title="the class of all things">Thing</a>.</p>
-</div>
-</div>
-</body>
 </html>
-

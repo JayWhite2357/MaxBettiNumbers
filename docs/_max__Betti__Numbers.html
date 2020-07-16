@@ -1,59 +1,97 @@
-<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
-<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head><title>maxBettiNumbers -- Upper bounds for total Betti numbers in a family of saturated ideals.</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" type="text/css" href="doc.css"/>
-</head>
-<body>
-<table class="buttons">
-  <tr>
-    <td><div><a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html">next</a> | <a href="___Max__Betti.html">previous</a> | <a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html">forward</a> | <a href="___Max__Betti.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
-
-    </td>
-  </tr>
-</table>
-<div><a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a></div>
-<hr/>
-<div><h1>maxBettiNumbers -- Upper bounds for total Betti numbers in a family of saturated ideals.</h1>
-<div class="single"><h2>Synopsis</h2>
-<ul><li><dl class="element"><dt>Usage: </dt><dd><tt>maxBettiNumbers (N,</tt></dd><dd><tt>HilbertPolynomial => p,</tt></dd><dd><tt>HilbertFunctionLowerBound => G,</tt></dd><dd><tt>HilbertFunctionUpperBound => F,</tt></dd><dd><tt>HilbertDifferenceLowerBound => g,</tt></dd><dd><tt>HilbertDifferenceUpperBound => f)</tt></dd></dl>
-</li>
-<li><div class="single">Inputs:<ul><li><span><tt>N</tt>, <span>an <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Z__Z.html">integer</a></span>, the number of variables in the ambient polynomial ring.</span></li>
-</ul>
-</div>
-</li>
-<li><div class="single"><a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/_using_spfunctions_spwith_spoptional_spinputs.html">Optional inputs</a>:<ul><li><span><tt>HilbertPolynomial => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Ring__Element.html">ring element</a></span>, <span>default value null</span>, the Hilbert polynomial, <tt>p</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Polynomial_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertPolynomial => ...)</a>.</span></span></li>
-<li><span><tt>HilbertFunctionLowerBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the lower bound for the Hilbert function, <tt>G</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertFunctionLowerBound => ...)</a>.</span></span></li>
-<li><span><tt>HilbertFunctionUpperBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the upper bound for the Hilbert function, <tt>F</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertFunctionUpperBound => ...)</a>.</span></span></li>
-<li><span><tt>HilbertDifferenceLowerBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the lower bound for the difference Hilbert function, <tt>g</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertDifferenceLowerBound => ...)</a>.</span></span></li>
-<li><span><tt>HilbertDifferenceUpperBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the upper bound for the difference Hilbert function, <tt>f</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertDifferenceUpperBound => ...)</a>.</span></span></li>
-<li><span><tt>ResultsCount => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___String.html">string</a></span>, <span>default value None</span>, how many Hilbert functions the result should include. See <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a>.</span></span></li>
-<li><span><tt>Algorithm => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___String.html">string</a></span>, <span>default value Automatic</span>, the algorithm to use. See <a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., Algorithm => ...)</a>.</span></span></li>
-</ul>
-</div>
-</li>
-<li><div class="single">Outputs:<ul><li><span><span>an instance of the type <a href="___Max__Betti.html" title="">MaxBetti</a></span>, an object with the upper bound and additional information.</span></li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="single"><h2>Description</h2>
-<div><div><p>Consider a polynomial ring, <i>S</i>, in <tt>N</tt> variables. Consider the family of saturated ideals, <i>I&sub;S</i>, satisfying the following constraints. (Note: <i>h<sub>S/I</sub></i> will denote the hilbert function of <i>S/I</i>, and <i>&Delta;</i> will denote the difference operator. (i.e. <i>&Delta;h<sub>S/I</sub>(d)=h<sub>S/I</sub>(d)-h<sub>S/I</sub>(d-1)</i>.)</p>
-<p>The functions <i>G</i>, <i>F</i>, <i>g</i>, <i>f</i>, and <i>p</i> are arguments to the method. In the case where a value is not given, the corresponding constraint is removed (i.e. made the trivial constraint). Note: if <i>p</i> is not specified <i>F</i> and <i>G</i> must be equal for large degrees.</p>
-<ul><li><i>G(d)&le;h<sub>S/I</sub>(d)&le;F(d)</i> for all <i>d</i></li>
-<li><i>g(d)&le;&Delta;h<sub>S/I</sub>(d)&le;f(d)</i> for all <i>d</i></li>
-<li><i>h<sub>S/I</sub>(d)=p(d)</i> for large <i>d</i></li>
-</ul>
-<p><tt>maxBettiNumbers</tt> returns the upper bound for the total Betti numbers of the ideals along with other information. A complete description of the output can be found under <a href="___Max__Betti.html" title="">MaxBetti</a>.</p>
-<p>Almost lexsegment ideals have the largest total Betti numbers out of all saturated ideals with a given Hilbert function. The function <a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> is useful to obtain the ideals with maximal Betti numbers.</p>
-<p>The following is an example in <i>6</i> variables where we fix the Hilbert polynomial to be <i>2d+10</i>, and look at the Betti tables of the ideals that realize the maximum total Betti numbers.</p>
-</div>
-<table class="examples"><tr><td><pre>i1 : QQ[d];</pre>
-</td></tr>
-<tr><td><pre>i2 : result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
+  <head>
+    <title>maxBettiNumbers -- Upper bounds for total Betti numbers in a family of saturated ideals.</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <link type="text/css" rel="stylesheet" href="doc.css"/>
+  </head>
+  <body>
+    <table class="buttons">
+      <tr>
+        <td>
+          <div>
+<a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html">next</a> | <a href="___Max__Betti.html">previous</a> | <a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html">forward</a> | <a href="___Max__Betti.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
+<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a>    </div>
+    <hr/>
+    <div>
+      <h1>maxBettiNumbers -- Upper bounds for total Betti numbers in a family of saturated ideals.</h1>
+      <div>
+        <h2>Synopsis</h2>
+        <ul>
+          <li>
+            <dl class="element">
+              <dt>Usage: </dt>
+              <dd><tt>maxBettiNumbers (N,</tt></dd>
+              <dd><tt>HilbertPolynomial => p,</tt></dd>
+              <dd><tt>HilbertFunctionLowerBound => G,</tt></dd>
+              <dd><tt>HilbertFunctionUpperBound => F,</tt></dd>
+              <dd><tt>HilbertDifferenceLowerBound => g,</tt></dd>
+              <dd><tt>HilbertDifferenceUpperBound => f)</tt></dd>
+            </dl>
+          </li>
+          <li>
+Inputs:            <ul>
+              <li>
+<span><tt>N</tt>, <span>an <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Z__Z.html">integer</a></span>, the number of variables in the ambient polynomial ring.</span>              </li>
+            </ul>
+          </li>
+          <li>
+<a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/_using_spfunctions_spwith_spoptional_spinputs.html">Optional inputs</a>:            <ul>
+              <li>
+<span><tt>HilbertPolynomial => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___Ring__Element.html">ring element</a></span>, <span>default value null</span>, the Hilbert polynomial, <tt>p</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Polynomial_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertPolynomial => ...)</a>.</span></span>              </li>
+              <li>
+<span><tt>HilbertFunctionLowerBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the lower bound for the Hilbert function, <tt>G</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertFunctionLowerBound => ...)</a>.</span></span>              </li>
+              <li>
+<span><tt>HilbertFunctionUpperBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the upper bound for the Hilbert function, <tt>F</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertFunctionUpperBound => ...)</a>.</span></span>              </li>
+              <li>
+<span><tt>HilbertDifferenceLowerBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the lower bound for the difference Hilbert function, <tt>g</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertDifferenceLowerBound => ...)</a>.</span></span>              </li>
+              <li>
+<span><tt>HilbertDifferenceUpperBound => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___List.html">list</a></span>, <span>default value {}</span>, the upper bound for the difference Hilbert function, <tt>f</tt>, of the ideals in the family. See <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertDifferenceUpperBound => ...)</a>.</span></span>              </li>
+              <li>
+<span><tt>ResultsCount => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___String.html">string</a></span>, <span>default value None</span>, how many Hilbert functions the result should include. See <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a>.</span></span>              </li>
+              <li>
+<span><tt>Algorithm => </tt><span><span>a <a href="/usr/share/doc/Macaulay2/Macaulay2Doc/html/___String.html">string</a></span>, <span>default value Automatic</span>, the algorithm to use. See <a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., Algorithm => ...)</a>.</span></span>              </li>
+            </ul>
+          </li>
+          <li>
+Outputs:            <ul>
+              <li>
+<span><span>an instance of the type <a href="___Max__Betti.html" title="">MaxBetti</a></span>, an object with the upper bound and additional information.</span>              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h2>Description</h2>
+        <div>
+          <p>Consider a polynomial ring, <i>S</i>, in <tt>N</tt> variables. Consider the family of saturated ideals, <i>I&sub;S</i>, satisfying the following constraints. (Note: <i>h<sub>S/I</sub></i> will denote the hilbert function of <i>S/I</i>, and <i>&Delta;</i> will denote the difference operator. (i.e. <i>&Delta;h<sub>S/I</sub>(d)=h<sub>S/I</sub>(d)-h<sub>S/I</sub>(d-1)</i>.)</p>
+          <p>The functions <i>G</i>, <i>F</i>, <i>g</i>, <i>f</i>, and <i>p</i> are arguments to the method. In the case where a value is not given, the corresponding constraint is removed (i.e. made the trivial constraint). Note: if <i>p</i> is not specified <i>F</i> and <i>G</i> must be equal for large degrees.</p>
+          <ul>
+            <li>
+<i>G(d)&le;h<sub>S/I</sub>(d)&le;F(d)</i> for all <i>d</i>            </li>
+            <li>
+<i>g(d)&le;&Delta;h<sub>S/I</sub>(d)&le;f(d)</i> for all <i>d</i>            </li>
+            <li>
+<i>h<sub>S/I</sub>(d)=p(d)</i> for large <i>d</i>            </li>
+          </ul>
+          <p><tt>maxBettiNumbers</tt> returns the upper bound for the total Betti numbers of the ideals along with other information. A complete description of the output can be found under <a href="___Max__Betti.html" title="">MaxBetti</a>.</p>
+          <p>Almost lexsegment ideals have the largest total Betti numbers out of all saturated ideals with a given Hilbert function. The function <a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> is useful to obtain the ideals with maximal Betti numbers.</p>
+          <p>The following is an example in <i>6</i> variables where we fix the Hilbert polynomial to be <i>2d+10</i>, and look at the Betti tables of the ideals that realize the maximum total Betti numbers.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i1 : QQ[d];</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i2 : result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
        ResultsCount => &quot;All&quot;)
 
 o2 = MaxBetti{BettiUpperBound => {18, 51, 60, 33, 7}      }
@@ -64,8 +102,11 @@ o2 = MaxBetti{BettiUpperBound => {18, 51, 60, 33, 7}      }
               MaximumBettiSum => 169
 
 o2 : MaxBetti</pre>
-</td></tr>
-<tr><td><pre>i3 : almostLexBetti_6 \ toList result.HilbertFunctions
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i3 : almostLexBetti_6 \ toList result.HilbertFunctions
 
              0  1  2  3  4 5         0  1  2  3  4 5
 o3 = {total: 1 18 51 60 33 7, total: 1 18 51 60 33 7}
@@ -75,11 +116,16 @@ o3 = {total: 1 18 51 60 33 7, total: 1 18 51 60 33 7}
                                   3: .  3 11 15  9 2
 
 o3 : List</pre>
-</td></tr>
-</table>
-<div><p>Restricting to ideals with at least one linear element gives us a different result.</p>
-</div>
-<table class="examples"><tr><td><pre>i4 : result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>Restricting to ideals with at least one linear element gives us a different result.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i4 : result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
        HilbertFunctionUpperBound => {,5}, ResultsCount => &quot;All&quot;)
 
 o4 = MaxBetti{BettiUpperBound => {16, 48, 59, 33, 7}      }
@@ -89,8 +135,11 @@ o4 = MaxBetti{BettiUpperBound => {16, 48, 59, 33, 7}      }
               MaximumBettiSum => 163
 
 o4 : MaxBetti</pre>
-</td></tr>
-<tr><td><pre>i5 : I = almostLexIdeal(QQ[x_1..x_6], first result.HilbertFunctions)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i5 : I = almostLexIdeal(QQ[x_1..x_6], first result.HilbertFunctions)
 
                  2     2                     2             2   3   2     2   
 o5 = ideal (x , x , x x , x x x , x x x , x x , x x x , x x , x , x x , x x ,
@@ -102,8 +151,11 @@ o5 = ideal (x , x , x x , x x x , x x x , x x , x x x , x x , x , x x , x x ,
 
 o5 : Ideal of QQ[x , x , x , x , x , x ]
                   1   2   3   4   5   6</pre>
-</td></tr>
-<tr><td><pre>i6 : betti res I
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i6 : betti res I
 
             0  1  2  3  4 5
 o6 = total: 1 16 48 59 33 7
@@ -112,78 +164,130 @@ o6 = total: 1 16 48 59 33 7
          2: . 14 47 59 33 7
 
 o6 : BettiTally</pre>
-</td></tr>
-<tr><td><pre>i7 : hilbertPolynomial(I, Projective=>false)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i7 : hilbertPolynomial(I, Projective=>false)
 
 o7 = 2i + 10
 
 o7 : QQ[i]</pre>
-</td></tr>
-<tr><td><pre>i8 : (0..6)/(d->hilbertFunction(d,I))
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i8 : (0..6)/(d->hilbertFunction(d,I))
 
 o8 = (1, 5, 14, 16, 18, 20, 22)
 
 o8 : Sequence</pre>
-</td></tr>
-</table>
-<div><p>In most situations, there is an ideal in the family that realizes this upper bound. However, there are situations where this is not true. This method indicates this with the key <a href="_is__Realizable.html" title="">isRealizable</a>. However, there is always an ideal that gives the maximum sum of the total Betti numbers. This maximum is given by the key <a href="___Maximum__Betti__Sum.html" title="">MaximumBettiSum</a>. The following example in <i>5</i> variables shows this phenomenon. In it we fix the Hilbert polynomial to be <i>5d+11</i>, and we restrict <i>&Delta;h<sub>S/I</sub>(d)&ge;8</i> for <i>d=3,4</i>.</p>
-</div>
-<table class="examples"><tr><td><pre>i9 : result = maxBettiNumbers(5, HilbertDifferenceLowerBound => {,,,8,8},
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>In most situations, there is an ideal in the family that realizes this upper bound. However, there are situations where this is not true. This method indicates this with the key <a href="_is__Realizable.html" title="">isRealizable</a>. However, there is always an ideal that gives the maximum sum of the total Betti numbers. This maximum is given by the key <a href="___Maximum__Betti__Sum.html" title="">MaximumBettiSum</a>. The following example in <i>5</i> variables shows this phenomenon. In it we fix the Hilbert polynomial to be <i>5d+11</i>, and we restrict <i>&Delta;h<sub>S/I</sub>(d)&ge;8</i> for <i>d=3,4</i>.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i9 : result = maxBettiNumbers(5, HilbertDifferenceLowerBound => {,,,8,8},
        HilbertPolynomial => 5*d+11);</pre>
-</td></tr>
-<tr><td><pre>i10 : sum result.BettiUpperBound
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i10 : sum result.BettiUpperBound
 
 o10 = 98</pre>
-</td></tr>
-<tr><td><pre>i11 : result.MaximumBettiSum  -- This doesn't match the previous sum.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i11 : result.MaximumBettiSum  -- This doesn't match the previous sum.
 
 o11 = 97</pre>
-</td></tr>
-<tr><td><pre>i12 : result.isRealizable     -- As a result, this is false.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i12 : result.isRealizable     -- As a result, this is false.
 
 o12 = false</pre>
-</td></tr>
-</table>
-<div><h2>Default constraints</h2>
-<p>Because the inputs can be incomplete or absent, <tt>maxBettiNumbers</tt> assumes the following default values for the missing information.</p>
-<ul><li>Lower bounds have a default value of <i>0</i>.</li>
-<li>Upper bounds have a default value of infinity.</li>
-<li>Truncated hilbert functions are assumed to continue, but the associated hilbert polynomial is assumed to match the hilbert function at last degree where it is specified.</li>
-<li>If no Hilbert polynomial is specified, the Hilbert polynomial is assumed to be the Hilbert polynomial of <i>G</i> and <i>F</i>.</li>
-</ul>
-<p>More details can be found under <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertFunctionLowerBound => ...)</a>. In the case where the inputs result in constraints that are impossible or invalid, an error is thrown.</p>
-<h2>Output Results</h2>
-<p>In addition to upper bounds for the total Betti numbers, this function can optionally output Hilbert functions with maximal total Betti numbers. This is specified with the optional argument <tt>ResultsCount</tt>. More details can be found under <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a>.</p>
-<h2>Different Algorithms</h2>
-<p>There are two different algorithms that get used: the Simplified algorithm, which is faster, but is not guarenteed to give sharp bounds, and the Complete algorithm, which always gives sharp bounds. The optional argument <tt>Algorithm</tt> allows the selection of the algorithm. A more complete description can be found under <a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., Algorithm => ...)</a>.</p>
-<h2>More Examples</h2>
-<p>We will consider an example where <i>S</i> is the polynomial ring in <i>5</i> variables. This example has only maximal total Betti Numbers, and not maximum total Betti numbers. Also, the Simplified and Complete algorithms give different results. Both of these are somewhat unusual, but give an illuminating example. We will choose the following constraints: </p><div style="text-align:center"><i>h<sub>S/I</sub>(6)=41&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h<sub>S/I</sub>(d)=49&nbsp;for&nbsp;large&nbsp;d</i></div><p> </p><div style="text-align:center"><i>8&le;&Delta;h<sub>S/I</sub>(3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&le;&Delta;h<sub>S/I</sub>(4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&le;&Delta;h<sub>S/I</sub>(5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&le;&Delta;h<sub>S/I</sub>(6)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></div><p> Since we will be using these constraints in several examples, we will first define a few variables to reduce repetition.</p>
-</div>
-<table class="examples"><tr><td><pre>i13 : N = 5;</pre>
-</td></tr>
-<tr><td><pre>i14 : g = HilbertDifferenceLowerBound => {,,,8,8,5,5};</pre>
-</td></tr>
-<tr><td><pre>i15 : G = HilbertFunctionLowerBound => {,,,,,,41};</pre>
-</td></tr>
-<tr><td><pre>i16 : F = HilbertFunctionUpperBound => {,,,,,,41};</pre>
-</td></tr>
-<tr><td><pre>i17 : p = HilbertPolynomial => 49;</pre>
-</td></tr>
-</table>
-<div><p>We find that <i>(23, 54, 47, 14)</i> is the upper bound for the total Betti numbers of all saturated ideals with these constraints. Additionally, the maximum for the sum of the Betti numbers is <i>137</i>. Note that because <i>23 + 54 + 47 + 14 = 138</i>, there is no single ideal with total Betti numbers of <i>(23, 54, 47, 14)</i>.</p>
-</div>
-<table class="examples"><tr><td><pre>i18 : maxBettiNumbers(N,p,g,G,F)
+            </td>
+          </tr>
+        </table>
+        <div>
+          <h2>Default constraints</h2>
+          <p>Because the inputs can be incomplete or absent, <tt>maxBettiNumbers</tt> assumes the following default values for the missing information.</p>
+          <ul>
+            <li>
+Lower bounds have a default value of <i>0</i>.            </li>
+            <li>
+Upper bounds have a default value of infinity.            </li>
+            <li>
+Truncated hilbert functions are assumed to continue, but the associated hilbert polynomial is assumed to match the hilbert function at last degree where it is specified.            </li>
+            <li>
+If no Hilbert polynomial is specified, the Hilbert polynomial is assumed to be the Hilbert polynomial of <i>G</i> and <i>F</i>.            </li>
+          </ul>
+          <p>More details can be found under <a href="_max__Betti__Numbers_lp..._cm_sp__Hilbert__Function__Lower__Bound_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., HilbertFunctionLowerBound => ...)</a>. In the case where the inputs result in constraints that are impossible or invalid, an error is thrown.</p>
+          <h2>Output Results</h2>
+          <p>In addition to upper bounds for the total Betti numbers, this function can optionally output Hilbert functions with maximal total Betti numbers. This is specified with the optional argument <tt>ResultsCount</tt>. More details can be found under <a href="_max__Betti__Numbers_lp..._cm_sp__Results__Count_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., ResultsCount => ...)</a>.</p>
+          <h2>Different Algorithms</h2>
+          <p>There are two different algorithms that get used: the Simplified algorithm, which is faster, but is not guarenteed to give sharp bounds, and the Complete algorithm, which always gives sharp bounds. The optional argument <tt>Algorithm</tt> allows the selection of the algorithm. A more complete description can be found under <a href="_max__Betti__Numbers_lp..._cm_sp__Algorithm_sp_eq_gt_sp..._rp.html" title="">maxBettiNumbers(..., Algorithm => ...)</a>.</p>
+          <h2>More Examples</h2>
+          <p>We will consider an example where <i>S</i> is the polynomial ring in <i>5</i> variables. This example has only maximal total Betti Numbers, and not maximum total Betti numbers. Also, the Simplified and Complete algorithms give different results. Both of these are somewhat unusual, but give an illuminating example. We will choose the following constraints: </p><div style="text-align:center"><i>h<sub>S/I</sub>(6)=41&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h<sub>S/I</sub>(d)=49&nbsp;for&nbsp;large&nbsp;d</i></div><p> </p><div style="text-align:center"><i>8&le;&Delta;h<sub>S/I</sub>(3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&le;&Delta;h<sub>S/I</sub>(4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&le;&Delta;h<sub>S/I</sub>(5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5&le;&Delta;h<sub>S/I</sub>(6)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i></div><p> Since we will be using these constraints in several examples, we will first define a few variables to reduce repetition.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i13 : N = 5;</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i14 : g = HilbertDifferenceLowerBound => {,,,8,8,5,5};</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i15 : G = HilbertFunctionLowerBound => {,,,,,,41};</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i16 : F = HilbertFunctionUpperBound => {,,,,,,41};</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i17 : p = HilbertPolynomial => 49;</pre>
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>We find that <i>(23, 54, 47, 14)</i> is the upper bound for the total Betti numbers of all saturated ideals with these constraints. Additionally, the maximum for the sum of the Betti numbers is <i>137</i>. Note that because <i>23 + 54 + 47 + 14 = 138</i>, there is no single ideal with total Betti numbers of <i>(23, 54, 47, 14)</i>.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i18 : maxBettiNumbers(N,p,g,G,F)
 
 o18 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}}
                isRealizable => false
                MaximumBettiSum => 137
 
 o18 : MaxBetti</pre>
-</td></tr>
-</table>
-<div><p>If we want the Hilbert function of an ideal with maximal total Betti numbers, we can pass <tt>ResultsCount=>&quot;One&quot;</tt> as an option. Note, this gives an ideal with the maximum for the sum of the Betti numbers.</p>
-</div>
-<table class="examples"><tr><td><pre>i19 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;One&quot;)
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>If we want the Hilbert function of an ideal with maximal total Betti numbers, we can pass <tt>ResultsCount=>&quot;One&quot;</tt> as an option. Note, this gives an ideal with the maximum for the sum of the Betti numbers.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i19 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;One&quot;)
 
 o19 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                         }
                HilbertFunctions => {{1, 5, 11, 21, 30, 36, 41, 46, 49, 49}}
@@ -191,11 +295,16 @@ o19 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                         }
                MaximumBettiSum => 137
 
 o19 : MaxBetti</pre>
-</td></tr>
-</table>
-<div><p>If we want the Hilbert function of all ideals that have the maximum sum of the Betti numbers, we can pass <tt>ResultsCount=>&quot;AllMaxBettiSum&quot;</tt> as an option.</p>
-</div>
-<table class="examples"><tr><td><pre>i20 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;AllMaxBettiSum&quot;)
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>If we want the Hilbert function of all ideals that have the maximum sum of the Betti numbers, we can pass <tt>ResultsCount=>&quot;AllMaxBettiSum&quot;</tt> as an option.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i20 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;AllMaxBettiSum&quot;)
 
 o20 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                                                 }
                HilbertFunctions => {{1, 5, 11, 21, 30, 36, 41, 42, 43, 44, 45, 46, 47, 48, 49, 49}}
@@ -220,11 +329,16 @@ o20 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                              
                MaximumBettiSum => 137
 
 o20 : MaxBetti</pre>
-</td></tr>
-</table>
-<div><p>Finally, if we want the Hilbert function of all ideals that have maximal total Betti numbers, we can pass <tt>ResultsCount=>&quot;All&quot;</tt> as an option. In addition to returning the upper bound and Hilbert functions, the maximal total Betti numbers of <i>(23, 54, 45, 13)</i> and <i>(22, 54, 47, 14)</i> are also returned.</p>
-</div>
-<table class="examples"><tr><td><pre>i21 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;All&quot;)
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>Finally, if we want the Hilbert function of all ideals that have maximal total Betti numbers, we can pass <tt>ResultsCount=>&quot;All&quot;</tt> as an option. In addition to returning the upper bound and Hilbert functions, the maximal total Betti numbers of <i>(23, 54, 45, 13)</i> and <i>(22, 54, 47, 14)</i> are also returned.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i21 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;All&quot;)
 
 o21 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                                                 }
                HilbertFunctions => {{1, 5, 15, 23, 31, 36, 41, 42, 43, 44, 45, 46, 47, 48, 49, 49}}
@@ -269,11 +383,16 @@ o21 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                              
                MaximumBettiSum => 137
 
 o21 : MaxBetti</pre>
-</td></tr>
-</table>
-<div><p>Because we are setting an upper bound of <i>h<sub>S/I</sub>(6) &le;41</i>, the Simplified algorithm will not give sharp bounds. As a result, the Complete algorithm is automatically chosen instead. However, we can force the use of a different one. In this case, if we specify <tt>Algorithm=>&quot;Simplified&quot;</tt>, we get an upper bound that is, necessarily, larger. Additionally, we are given a Hilbert function that appears to be valid, but is not the Hilbert function of any saturated ideal.</p>
-</div>
-<table class="examples"><tr><td><pre>i22 : maxBettiNumbers(N,p,g,G,F, Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;One&quot;)
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>Because we are setting an upper bound of <i>h<sub>S/I</sub>(6) &le;41</i>, the Simplified algorithm will not give sharp bounds. As a result, the Complete algorithm is automatically chosen instead. However, we can force the use of a different one. In this case, if we specify <tt>Algorithm=>&quot;Simplified&quot;</tt>, we get an upper bound that is, necessarily, larger. Additionally, we are given a Hilbert function that appears to be valid, but is not the Hilbert function of any saturated ideal.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i22 : maxBettiNumbers(N,p,g,G,F, Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;One&quot;)
 
 o22 = MaxBetti{BettiUpperBound => {24, 57, 50, 15}                     }
                HilbertFunctions => {{1, 5, 11, 21, 30, 36, 41, 49, 49}}
@@ -281,11 +400,16 @@ o22 = MaxBetti{BettiUpperBound => {24, 57, 50, 15}                     }
                MaximumBettiSum => 145
 
 o22 : MaxBetti</pre>
-</td></tr>
-</table>
-<div><p>We can compare the speed of the two algorithms with an example of fixing the Hilbert polynomial to be <i>3d<sup>2</sup>-6d+175</i> in a ring with <i>6</i> variables. Because there is no upper bound for <i>h<sub>S/I</sub></i>, both algorithms give valid results, and smallest possible upper bounds.</p>
-</div>
-<table class="examples"><tr><td><pre>i27 : p = HilbertPolynomial => 3*d^2-6*d+175;
+            </td>
+          </tr>
+        </table>
+        <div>
+          <p>We can compare the speed of the two algorithms with an example of fixing the Hilbert polynomial to be <i>3d<sup>2</sup>-6d+175</i> in a ring with <i>6</i> variables. Because there is no upper bound for <i>h<sub>S/I</sub></i>, both algorithms give valid results, and smallest possible upper bounds.</p>
+        </div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i27 : p = HilbertPolynomial => 3*d^2-6*d+175;
 
 i28 : first timing maxBettiNumbers(6, p,
         Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;None&quot;)
@@ -314,24 +438,31 @@ i31 : first timing maxBettiNumbers(6, p,
 o31 = 26.732769924
 
 o31 : RR (of precision 53)</pre>
-</td></tr>
-</table>
-</div>
-</div>
-<div class="single"><h2>Caveat</h2>
-<div><div><p>If <tt>Algorithm=>&quot;Simplified&quot;</tt> is forced, this may not return valid Hilbert functions for some inputs.</p>
-</div>
-</div>
-</div>
-<div class="single"><h2>See also</h2>
-<ul><li><span><a href="___Max__Betti.html" title="">MaxBetti</a></span></li>
-</ul>
-</div>
-<div class="waystouse"><h2>Ways to use <tt>maxBettiNumbers</tt> :</h2>
-<ul><li>maxBettiNumbers(ZZ)</li>
-</ul>
-</div>
-</div>
-</body>
-</html>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <h2>Caveat</h2>
+        <div>
+          <p>If <tt>Algorithm=>&quot;Simplified&quot;</tt> is forced, this may not return valid Hilbert functions for some inputs.</p>
+        </div>
+      </div>
+      <div>
+        <h2>See also</h2>
+        <ul>
+          <li>
+<span><a href="___Max__Betti.html" title="">MaxBetti</a></span>          </li>
+        </ul>
+      </div>
+      <div class="waystouse">
+        <h2>Ways to use <tt>maxBettiNumbers</tt> :</h2>
+        <ul>
+          <li>
+maxBettiNumbers(ZZ)          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
 
+</html>

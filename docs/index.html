@@ -1,69 +1,103 @@
-<?xml version="1.0" encoding="utf-8" ?>  <!-- for emacs: -*- coding: utf-8 -*- -->
-<!-- Apache may like this line in the file .htaccess: AddCharset utf-8 .html -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"	 "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd" >
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head><title>MaxBettiNumbers -- Methods to find maximum Betti numbers given bounds on the Hilbert function.</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" type="text/css" href="doc.css"/>
-</head>
-<body>
-<table class="buttons">
-  <tr>
-    <td><div><a href="_almost__Lex__Betti.html">next</a> | previous | <a href="_almost__Lex__Betti.html">forward</a> | backward | up | top | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a></div>
+  <head>
+    <title>MaxBettiNumbers -- Methods to find maximum Betti numbers given bounds on the Hilbert function.</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <link type="text/css" rel="stylesheet" href="doc.css"/>
+  </head>
+  <body>
+    <table class="buttons">
+      <tr>
+        <td>
+          <div>
+<a href="_almost__Lex__Betti.html">next</a> | previous | <a href="_almost__Lex__Betti.html">forward</a> | backward | up | top | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
+<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a>    </div>
+    <hr/>
+    <div>
+      <h1>MaxBettiNumbers -- Methods to find maximum Betti numbers given bounds on the Hilbert function.</h1>
+      <div>
+        <h2>Description</h2>
+        <div>
+          <p>The method <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> is the headliner in this package. It returns upper bounds for the total Betti numbers in a family that has bounds on the Hilbert function and/or the Hilbert difference function.</p>
+          <p>The method <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> can optionally return special Hilbert functions. The methods <a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a> and <a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> are helpful in working with these Hilbert function. The functions <a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> and <a href="_lexsegment__Ideal.html" title="Create a lexsegment ideal.">lexsegmentIdeal</a> use the same code, and are exported from the package in hopes that they are useful. These functions are written with a concern for speed and efficiency.</p>
+        </div>
+      </div>
+      <div>
+        <h2>Author</h2>
+        <ul>
+          <li>
+Jay White<span> &lt;<a href="mailto:jay.white@uky.edu">jay.white@uky.edu</a>></span>          </li>
+        </ul>
+      </div>
+      <div>
+        <h2>Version</h2>
+        <p>This documentation describes version <b>0.9</b> of MaxBettiNumbers.</p>
+      </div>
+      <div>
+        <h2>Source code</h2>
+        <p>The source code from which this documentation is derived is in the file <a href="./MaxBettiNumbers.m2">MaxBettiNumbers.m2</a>.</p>
+      </div>
+      <div>
+        <h2>Exports</h2>
+        <div class="exports">
+          <ul>
+            <li>
+Types              <ul>
+                <li>
+<span><a href="___Max__Betti.html" title="">MaxBetti</a></span>                </li>
+              </ul>
+            </li>
+            <li>
+Functions and commands              <ul>
+                <li>
+<span><a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a> -- Graded Betti numbers of an almost lexsegment ideal.</span>                </li>
+                <li>
+<span><a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> -- Create an almost lexsegment ideal.</span>                </li>
+                <li>
+<span><a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> -- Graded Betti numbers of a lexsegment ideal.</span>                </li>
+                <li>
+<span><a href="_lexsegment__Ideal.html" title="Create a lexsegment ideal.">lexsegmentIdeal</a> -- Create a lexsegment ideal.</span>                </li>
+                <li>
+<span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span>                </li>
+              </ul>
+            </li>
+            <li>
+Symbols              <ul>
+                <li>
+<span><a href="___As__Tally.html" title="">AsTally</a></span>                </li>
+                <li>
+<span><a href="___Betti__Upper__Bound.html" title="">BettiUpperBound</a></span>                </li>
+                <li>
+<span><a href="___Hilbert__Difference__Lower__Bound.html" title="">HilbertDifferenceLowerBound</a></span>                </li>
+                <li>
+<span><a href="___Hilbert__Difference__Upper__Bound.html" title="">HilbertDifferenceUpperBound</a></span>                </li>
+                <li>
+<span><a href="___Hilbert__Function__Lower__Bound.html" title="">HilbertFunctionLowerBound</a></span>                </li>
+                <li>
+<span><a href="___Hilbert__Functions.html" title="">HilbertFunctions</a></span>                </li>
+                <li>
+<span><a href="___Hilbert__Function__Upper__Bound.html" title="">HilbertFunctionUpperBound</a></span>                </li>
+                <li>
+<span><a href="___Hilbert__Polynomial.html" title="">HilbertPolynomial</a></span>                </li>
+                <li>
+<span><a href="_is__Realizable.html" title="">isRealizable</a></span>                </li>
+                <li>
+<span><a href="___Maximal__Betti__Numbers.html" title="">MaximalBettiNumbers</a></span>                </li>
+                <li>
+<span><a href="___Maximum__Betti__Sum.html" title="">MaximumBettiSum</a></span>                </li>
+                <li>
+<span><a href="___Results__Count.html" title="">ResultsCount</a></span>                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
 
-    </td>
-  </tr>
-</table>
-<div><a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a></div>
-<hr/>
-<div><h1>MaxBettiNumbers -- Methods to find maximum Betti numbers given bounds on the Hilbert function.</h1>
-<div class="single"><h2>Description</h2>
-<div><div><p>The method <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> is the headliner in this package. It returns upper bounds for the total Betti numbers in a family that has bounds on the Hilbert function and/or the Hilbert difference function.</p>
-<p>The method <a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> can optionally return special Hilbert functions. The methods <a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a> and <a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> are helpful in working with these Hilbert function. The functions <a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> and <a href="_lexsegment__Ideal.html" title="Create a lexsegment ideal.">lexsegmentIdeal</a> use the same code, and are exported from the package in hopes that they are useful. These functions are written with a concern for speed and efficiency.</p>
-</div>
-</div>
-</div>
-<div class="single"><h2>Author</h2>
-<ul><li><div class="single">Jay White<span> &lt;<a href="mailto:jay.white@uky.edu">jay.white@uky.edu</a>></span></div>
-</li>
-</ul>
-</div>
-<div class="single"><h2>Version</h2>
-This documentation describes version <b>0.9</b> of MaxBettiNumbers.</div>
-<div class="single"><h2>Source code</h2>
-The source code from which this documentation is derived is in the file <a href="./MaxBettiNumbers.m2">MaxBettiNumbers.m2</a>.</div>
-<div class="single"><h2>Exports</h2>
-<div class="exports"><ul><li><div class="single">Types<ul><li><span><a href="___Max__Betti.html" title="">MaxBetti</a></span></li>
-</ul>
-</div>
-</li>
-<li><div class="single">Functions and commands<ul><li><span><a href="_almost__Lex__Betti.html" title="Graded Betti numbers of an almost lexsegment ideal.">almostLexBetti</a> -- Graded Betti numbers of an almost lexsegment ideal.</span></li>
-<li><span><a href="_almost__Lex__Ideal.html" title="Create an almost lexsegment ideal.">almostLexIdeal</a> -- Create an almost lexsegment ideal.</span></li>
-<li><span><a href="_lex__Betti.html" title="Graded Betti numbers of a lexsegment ideal.">lexBetti</a> -- Graded Betti numbers of a lexsegment ideal.</span></li>
-<li><span><a href="_lexsegment__Ideal.html" title="Create a lexsegment ideal.">lexsegmentIdeal</a> -- Create a lexsegment ideal.</span></li>
-<li><span><a href="_max__Betti__Numbers.html" title="Upper bounds for total Betti numbers in a family of saturated ideals.">maxBettiNumbers</a> -- Upper bounds for total Betti numbers in a family of saturated ideals.</span></li>
-</ul>
-</div>
-</li>
-<li><div class="single">Symbols<ul><li><span><a href="___As__Tally.html" title="">AsTally</a></span></li>
-<li><span><a href="___Betti__Upper__Bound.html" title="">BettiUpperBound</a></span></li>
-<li><span><a href="___Hilbert__Difference__Lower__Bound.html" title="">HilbertDifferenceLowerBound</a></span></li>
-<li><span><a href="___Hilbert__Difference__Upper__Bound.html" title="">HilbertDifferenceUpperBound</a></span></li>
-<li><span><a href="___Hilbert__Function__Lower__Bound.html" title="">HilbertFunctionLowerBound</a></span></li>
-<li><span><a href="___Hilbert__Functions.html" title="">HilbertFunctions</a></span></li>
-<li><span><a href="___Hilbert__Function__Upper__Bound.html" title="">HilbertFunctionUpperBound</a></span></li>
-<li><span><a href="___Hilbert__Polynomial.html" title="">HilbertPolynomial</a></span></li>
-<li><span><a href="_is__Realizable.html" title="">isRealizable</a></span></li>
-<li><span><a href="___Maximal__Betti__Numbers.html" title="">MaximalBettiNumbers</a></span></li>
-<li><span><a href="___Maximum__Betti__Sum.html" title="">MaximumBettiSum</a></span></li>
-<li><span><a href="___Results__Count.html" title="">ResultsCount</a></span></li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</body>
 </html>
-
