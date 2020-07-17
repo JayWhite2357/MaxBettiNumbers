@@ -1,8 +1,43 @@
-TEST ///
-mbn = maxBettiNumbers(4,HilbertPolynomial=>4);
+TEST /// --Test a preknown result.
+N = 4;
+p = 4;
+mbn = maxBettiNumbers(N,HilbertPolynomial=>p);
 assert(mbn.BettiUpperBound === {6, 8, 3});
 ///
-TEST ///
+
+TEST /// --Test that all 8 versions of the algorithm produce the same result.
+testMatching = (N,p) -> (
+  mbn = maxBettiNumbers(N,HilbertPolynomial=>p);
+  mbn1 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"None");
+  mbn2 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"One");
+  mbn3 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"AllMaxBettiSum");
+  mbn4 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"All");
+  mbn5 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"None");
+  mbn6 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"One");
+  mbn7 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"AllMaxBettiSum");
+  mbn8 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"All");
+  assert(mbn.BettiUpperBound === mbn1.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn2.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn3.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn4.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn5.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn6.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn7.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn8.BettiUpperBound);
+);
+for i from 0 to 10 do testMatching(4, i);
+for i from 2 to 10 do testMatching(i, 4);
+///
+
+TEST /// --Test against brute force method
 loadPackage "StronglyStableIdeals";
 QQ[d]; p = 2*d+10; N = 5;
 time ssI = stronglyStableIdeals(p, N);
@@ -14,7 +49,8 @@ time maxbetti = max \ transpose (ssI / getTotalBetti_N);
 time mbn = maxBettiNumbers(N, HilbertPolynomial => p);
 assert(mbn.BettiUpperBound === maxbetti);
 ///
-TEST ///
+
+TEST /// --Test against a preknown result.
 N = 5;
 g = HilbertDifferenceLowerBound => {,,,8,8,5,5};
 G = HilbertFunctionLowerBound => {,,,,,,41};

@@ -394,44 +394,67 @@ BuildVLowerBound = (g, f, n) -> (
 --- Simplified Method returning no hilbert Functions
 --------------------------------------------------------------------------------
 
---- This is an implementation of the algorithm described in
---- 
+--- This is an implementation of the algorithm described in the paper
 --- Note: the portions of the pseudocode in algorithm 3.1 of above are
 ---   written in comments beginning with --**
+--- Notationally: putting a ' (prime) on a variable indicates that it is the
+---   value of the variable in the previous degree.
+
+--- Instead of using a dictionary with (d, c) keys, we opt to only use a list,
+---    the dictionaries are lists of the theoretical (d, c) keys.
+---    the "dictionary" in each degree is a list of all the keys, where the
+---    0th entry is the (d, G#d key). Note, to access a key with a d-1 degree,
+---    we simply access the previous version of that dictionary, which is why we
+---    have to keep track of that.
+--- To make sense of the more compact way of storing these values, we will use
+---    the shorthand b to represend c-g and i to represent j-G.
+
+
 SimplifiedNone = ( G, F, g, f, V, lb ) -> (
-  --**We initialize the base case by creating a dictionary maxVDict 
-  --**  containing (-1,0)=>0
-  maxVDict := { V#0#0 };
+  --**We initialize the base case by creating a dictionary maxVDict'
+  --**  containing (-1, 0) => 0
+  --- V#0#0 is the zero vector
+  maxVDict' := { V#0#0 };
+  --- These are the correct values in degree -1.
   G' := 0;
   F' := 0;
   maxj' := { 0 };
   --**For each value of d from 0 to D do:
   for d to #G - 1 do (
+    --- maxj#c is the max j value that we can get if we respect the Macaulay
+    ---   bound. Although it is not necessary, we can quit looping early by
+    ---   respecting this bound.
     maxj := new MutableList from G#d .. F#d;
     --**For each value of c from G(d) to F(d) do:
-    maxVDict = for c from G#d to F#d list (
-      --- Note: efficient and compact implementation of maximization
+    --- maxVDict' get's assigned only once we have looped through all c, so
+    ---   there is no need to create a maxVDict just to reassign maxVDict'
+    ---   notationally, it is confusing, but it works well this way.
+    maxVDict' = for c from G#d to F#d list (
+      --- max \ transpose does elementwise maximization on a bunch of lists
       max \ transpose(
         --**For each value of j from g(d) to f (d) do:
-        --- Note: The situations where j + F' < c or j + G' > c are impossible
+        --- The situations where j + F' < c or j + G' > c are impossible
         for j from max( g#d, c - F' ) to min( f#d, c - G' )
-        --- Note: We can ignore the situations where we violate the lower bound
+        --- We can ignore the situations where we violate the lower bound.
+        ---   This is done by comparing the Macaulay lower bound with the
+        ---   maximum j in the previous degree.
         when maxj'#( c - j - G' ) >= lb#d#( j - g#d ) 
         list (
           maxj#( c - G#d ) = j;
           --**Compute V0 = maxVDict(d', c') + Vq[d,j].
-          --- Note: This next line is the potential maximum for this iteration
-          maxVDict#( c - j - G' ) + V#d#( j - g#d )
+          --- This next line is the potential maximum for this iteration
+          maxVDict'#( c - j - G' ) + V#d#( j - g#d )
         )
       )
       --**Add the entry (d,c)=>maxV to the dictionary maxVDict
     );
+    --- Update all of the values so that they are correct for the next degree
     G' = G#d;
     F' = F#d;
     maxj' = maxj;
   );
   --**Return the value maxVDict(D, G(D), g(D))
-  maxVDict#0
+  maxVDict'#0
 );
 
 --------------------------------------------------------------------------------
@@ -442,37 +465,54 @@ SimplifiedNone = ( G, F, g, f, V, lb ) -> (
 --- Simplified Method returning all hilbert functions with max betti sum
 --------------------------------------------------------------------------------
 
+--- This method is similar in structure to SimplifiedNone
+--- The functions that give the maximum sum of the Vq's is returned in a
+---   "raveled" format. raveledHFs contains a list of each degree, which is a
+---   list of the value of the functions in that degree that give the maximum
+---   sum of V. This "raveled" result can be unraveled with the
+---   UnravelSimplified methods.
+--- Note, the last element of the V vectors is the sum of the Vq's, which is why
+---   we use that element for tracking HF.
+
 SimplifiedSome = (G, F, g, f, V, lb) -> (
-  prevmaxVDict := { V#0#0 };
-  prevG := 0;
-  prevF := 0;
-  prevmaxJ := { 0 };
+  maxVDict' := { V#0#0 };
+  G' := 0;
+  F' := 0;
+  maxj' := { 0 };
+  --- Each degree of this for loop returns all the j values in that degree with
+  ---   max V.
   raveledHFs := for d to #G - 1 list (
-    currmaxJ := new MutableList from G#d .. F#d;
+    maxj := new MutableList from G#d .. F#d;
     maxHFDict := new MutableList from G#d .. F#d;
-    prevmaxVDict = for c from G#d to F#d list (
-      maxSum := 0; maxHF := {};
+    maxVDict' = for c from G#d to F#d list (
+      --- Note, we need to track the maxSum so that we can collect the j values
+      maxSum := 0;
+      maxHF := { };
+      --- However, we can still utilize max \ transpose to maximize the vectors
       maxV := max \ transpose (
-        for j from max( g#d, c - prevF ) to min( f#d, c - prevG )
-        when prevmaxJ#( c - j - prevG ) >= lb#d#( j - g#d ) list (
-          currmaxJ#( c - G#d ) = j;
-          newV := prevmaxVDict#( c - j - prevG ) + V#d#( j - g#d );
-          if last newV === maxSum then (
+        for j from max( g#d, c - F' ) to min( f#d, c - G' )
+        when maxj'#( c - j - G' ) >= lb#d#( j - g#d ) list (
+          maxj#( c - G#d ) = j;
+          V0 := maxVDict'#( c - j - G' ) + V#d#( j - g#d );
+          if last V0 === maxSum then (
             maxHF = append( maxHF, j );
-          ) else if last newV > maxSum then (
+          ) else if last V0 > maxSum then (
             maxHF = { j };
-            maxSum = last newV;
+            maxSum = last V0;
           );
-          newV
+          V0
         )
       );
-      maxHFDict#(c-G#d) = maxHF;
+      maxHFDict#( c - G#d ) = maxHF;
       maxV
     );
-    prevG = G#d; prevF = F#d; prevmaxJ = currmaxJ;
+    G' = G#d;
+    F' = F#d;
+    maxj' = maxj;
+    --- This is the list of all j values that gave us max V
     toList maxHFDict
   );
-  (prevmaxVDict#0, raveledHFs)
+  ( maxVDict'#0, raveledHFs )
 );
 
 --------------------------------------------------------------------------------
@@ -483,33 +523,55 @@ SimplifiedSome = (G, F, g, f, V, lb) -> (
 --- Simplified Method returning all hilbert Functions
 --------------------------------------------------------------------------------
 
-SimplifiedAll = (G, F, g, f, V, lb) -> (
-  prevmaxVDict := {{V#0#0}}; prevG := 0; prevF := 0; prevmaxJ := {0};
-  raveledHFs := for d to #G-1 list (
-    currmaxJ := new MutableList from G#d..F#d;
-    maxHFDict := new MutableList from G#d..F#d;
-    prevmaxVDict = for c from G#d to F#d list (
+SimplifiedAll = ( G, F, g, f, V, lb ) -> (
+  maxVDict' := { { V#0#0 } };
+  G' := 0;
+  F' := 0;
+  maxj' := { 0 };
+  raveledHFs := for d to #G - 1 list (
+    maxj := new MutableList from G#d .. F#d;
+    maxHFDict := new MutableList from G#d .. F#d;
+    --- Instead of being a vectors, maxVDict#c is a list of vectors.
+    maxVDict' = for c from G#d to F#d list (
+      --- maxVHF will be the collection of all V and HF that are maximal.
+      ---   The keys of the table are the maximal values of V.
+      ---   The values of each key are the j's that give that value of V.
       maxVHF := new MutableHashTable;
-      for j from max(g#d,c-prevF) to min(f#d,c-prevG) when prevmaxJ#(c-j-prevG)>=lb#d#(j-g#d) do (
-        currmaxJ#(c-G#d) = j;
-        for Vprime in prevmaxVDict#(c-j-prevG) do (
-          newV := Vprime + V#d#(j-g#d);
-          if maxVHF#?newV then (
-            maxVHF#newV = append(maxVHF#newV, j);
-          ) else if false =!= for oldV in keys(maxVHF) do (
-            diffV := newV - oldV;
-            if min(diffV) >= 0 then remove(maxVHF, oldV)
-            else if max(diffV) <= 0 then break false
-          ) then maxVHF#newV = {j};
+      for j from max( g#d, c - F' ) to min( f#d, c - G' )
+      when maxj'#( c - j - G' ) >= lb#d#( j - g#d )
+      do (
+        maxj#( c - G#d ) = j;
+        --- Instead of being a vectors, maxVDict'#c' is a list of vectors.
+        for maxV' in maxVDict'#( c - j - G' ) do (
+          V0 := maxV' + V#d#( j - g#d );
+          if maxVHF#?V0 then (
+            --- In the case where V0 is already in maxVHF, add j to it's key.
+            maxVHF#V0 = append( maxVHF#V0, j );
+          ) else if false =!= ( --- If max Vdiff <= 0 below is never true...
+            for V1 in keys maxVHF do (
+              Vdiff := V0 - V1;
+              --- If V0 is greater than V1, remove V1.
+              if min Vdiff >= 0 then remove( maxVHF, V1 )
+              --- If V0 is less than V1, break and do nothing.
+              else if max Vdiff <= 0 then break false
+            )
+          ) then (
+            --- In the case where V0 is not less than any V1, add it to maxVHF.
+            maxVHF#V0 = { j };
+          )
         )
       );
-      maxHFDict#(c-G#d) = unique flatten values maxVHF;
+      --- We want to make maxHFDict simply a list of possible j values.
+      maxHFDict#( c - G#d ) = unique flatten values maxVHF;
+      --- maxVDict#c is a list the vectors stored in the keys of maxVHF
       keys maxVHF
     );
-    prevG = G#d; prevF = F#d; prevmaxJ = currmaxJ;
+    G' = G#d;
+    F' = F#d;
+    maxj' = maxj;
     toList maxHFDict
   );
-  (prevmaxVDict#0, raveledHFs)
+  ( maxVDict'#0, raveledHFs )
 );
 
 --------------------------------------------------------------------------------
@@ -520,29 +582,56 @@ SimplifiedAll = (G, F, g, f, V, lb) -> (
 --- Complete Method returning no hilbert Functions
 --------------------------------------------------------------------------------
 
-CompleteNone = (G, F, g, f, V, lb) -> (
-  prevmaxVDict := {{V#0#0}}; prevG := 0; prevg := 0;
-  for d to #G-1 do (
-    prevmaxVDict = for c from G#d to F#d list (
+--- Notationally: putting a ' (prime) on a variable indicates that it is the
+---   value of the variable in the previous degree.
+--- Also: i is shorthand for j-g and b is shorthand for c-G, as indicated above
+---   the method SimplifiedNone
+
+--- The "dictionary" entry is thus
+---   Dict#b#i instead of (d,c,j) and
+---   Dict'#b'#i' instead of (d-1,c',j')
+
+CompleteNone = ( G, F, g, f, V, lb ) -> (
+  maxVDict' := { { V#0#0 } };
+  G' := 0;
+  g' := 0;
+  for d to #G - 1 do (
+    --- Each iteration of the following is a list of the maxV values for each j.
+    maxVDict' = for c from G#d to F#d list (
       maxV := null;
-      reverse for j in reverse(g#d..min(f#d, c - prevG)) list (
-        bprime := c - j - prevG;
+      --- We have to traverse the list in reverse order.
+      reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
+        b' := c - j - G';
         i := j - g#d;
-        iprime := max(lb#d#i - prevg, 0);
-        if prevmaxVDict#?bprime and prevmaxVDict#bprime#?iprime then (
-          newV := prevmaxVDict#bprime#iprime + V#d#i;
-          if maxV === null then maxV = newV else (
-            diffV := newV - maxV;
-            if min(diffV) >= 0 then maxV = newV else if max(diffV) > 0 then maxV = max\transpose{maxV, newV};
-          );
+        i' := max( lb#d#i - g', 0 );
+        if maxVDict'#?b' and maxVDict'#b'#?i' then (
+          V0 := maxVDict'#b'#i' + V#d#i;
+          if maxV === null then (
+            maxV = V0
+          ) else (
+            Vdiff := V0 - maxV;
+            if min Vdiff >= 0 then (
+              maxV = V0 
+            ) else if max Vdiff > 0 then (
+              maxV = max \ transpose{ maxV, V0 }
+            )
+          )
         );
+        --- If this value of j is impossible, we simply won't save it.
+        ---   This won't mess up indexing because it can only happen in the
+        ---   beginnin iterations, and we reverse the list after.
         if maxV === null then continue;
+        --- The main difference from SimplifiedNone is that we need to save this
+        ---   value for each j so that we can use it in the next degree
+        ---   as a result, the loops cannot be written as compactly.
         maxV
       )
+      --- We return a list of the maxV values for each j.
     );
-    prevG = G#d; prevg = g#d;
+    G' = G#d;
+    g' = g#d;
   );
-  prevmaxVDict#0#0
+  maxVDict'#0#0
 );
 
 --------------------------------------------------------------------------------
@@ -553,41 +642,62 @@ CompleteNone = (G, F, g, f, V, lb) -> (
 --- Complete Method returning all hilbert functions with max betti sum
 --------------------------------------------------------------------------------
 
-CompleteSome = (G, F, g, f, V, lb) -> (
-  prevmaxVDict := {{V#0#0}}; prevG := 0; prevg := 0;
-  raveledHFs := for d to #G-1 list (
-    maxHFDict := new MutableList from G#d..F#d;
-    prevmaxVDict = for c from G#d to F#d list (
-      maxV := null; maxHF := {};
-      maxVHFList := reverse for j in reverse(g#d..min(f#d, c - prevG)) list (
-        bprime := c - j - prevG;
+--- This is a combination of CompleteNone and SimplifiedSome.
+--- The primary difference is that the "raveled" result in each degree must be
+---   a list where each entry corresponds to a c value, which in turn is a list
+---   of the possible j values that give maxV for that c and d. So, it is a
+---   list of lists of lists. This "raveled" result can be unraveled with the
+---   UnravelComplete methods.
+
+CompleteSome = ( G, F, g, f, V, lb ) -> (
+  maxVDict' := { { V#0#0 } };
+  G' := 0;
+  g' := 0;
+  raveledHFs := for d to #G - 1 list (
+    maxHFDict := new MutableList from G#d .. F#d;
+    maxVDict' = for c from G#d to F#d list (
+      maxV := null;
+      maxHF := { };
+      --- In this case, we need to collect both the maxV and the maxHF.
+      ---   The easiest way is to do it at the same time, and then just split it
+      ---   up later.
+      maxVHFList := reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
+        b' := c - j - G';
         i := j - g#d;
-        iprime := max(lb#d#i - prevg, 0);
-        if prevmaxVDict#?bprime and prevmaxVDict#bprime#?iprime then (
-          newV := prevmaxVDict#bprime#iprime + V#d#i;
+        i' := max( lb#d#i - g', 0 );
+        --- We need to check that this is actually a valid value of j that has
+        ---   any valid functions in the previous degree
+        if maxVDict'#?b' and maxVDict'#b'#?i' then (
+          V0 := maxVDict'#b'#i' + V#d#i;
           if maxV === null then (
-            maxHF = {j};
-            maxV = newV;
+            maxHF = { j };
+            maxV = V0;
           ) else (
-            if last newV === last maxV then (
-              maxHF = append(maxHF, j);
-            ) else if last newV > last maxV then (
-              maxHF = {j};
+            if last V0 === last maxV then (
+              maxHF = append( maxHF, j );
+            ) else if last V0 > last maxV then (
+              maxHF = { j };
             );
-            diffV := newV - maxV;
-            if min(diffV) >= 0 then maxV = newV else if max(diffV) > 0 then maxV = max\transpose{maxV, newV};
+            Vdiff := V0 - maxV;
+            if min Vdiff >= 0 then (
+              maxV = V0
+            ) else if max Vdiff > 0 then (
+              maxV = max \ transpose{ maxV, V0 }
+            )
           );
         );
         if maxV === null then continue;
-        (maxV, maxHF)
+        ( maxV, maxHF )
       );
-      maxHFDict#(c-G#d) = maxVHFList / last;
+      --- Here we just split up the list so that maxV and maxHF are separate.
+      maxHFDict#( c - G#d ) = maxVHFList / last;
       maxVHFList / first
     );
-    prevG = G#d; prevg = g#d;
+    G' = G#d;
+    g' = g#d;
     toList maxHFDict
   );
-  (prevmaxVDict#0#0, raveledHFs)
+  ( maxVDict'#0#0, raveledHFs )
 );
 
 --------------------------------------------------------------------------------
@@ -598,36 +708,49 @@ CompleteSome = (G, F, g, f, V, lb) -> (
 --- Complete Method returning all hilbert Functions
 --------------------------------------------------------------------------------
 
-CompleteAll = (G, F, g, f, V, lb) -> (
-  prevmaxVDict := {{{V#0#0}}}; prevG := 0; prevg := 0;
-  raveledHFs := for d to #G-1 list (
-    maxHFDict := new MutableList from G#d..F#d;
-    prevmaxVDict = for c from G#d to F#d list (
+--- This is by far the most complex version. However, there are no new ideas,
+---   it is simply a combination of the techniques in CompleteSome and
+---   SimplifiedAll.
+
+CompleteAll = ( G, F, g, f, V, lb ) -> (
+  maxVDict' := { { { V#0#0 } } };
+  G' := 0;
+  g' := 0;
+  raveledHFs := for d to #G - 1 list (
+    maxHFDict := new MutableList from G#d .. F#d;
+    maxVDict' = for c from G#d to F#d list (
       maxVHF := new MutableHashTable;
-      maxVHFList := reverse for j in reverse(g#d..min(f#d, c - prevG)) list (
-        bprime := c - j - prevG;
+      maxVHFList := reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
+        b' := c - j - G';
         i := j - g#d;
-        iprime := max(lb#d#i - prevg, 0);
-        if prevmaxVDict#?bprime and prevmaxVDict#bprime#?iprime then for Vprime in prevmaxVDict#bprime#iprime do (
-          newV := Vprime + V#d#i;
-          if maxVHF#?newV then (
-            maxVHF#newV = append(maxVHF#newV, j);
-          ) else if false =!= for oldV in keys(maxVHF) do (
-            diffV := newV - oldV;
-            if min(diffV) >= 0 then remove(maxVHF, oldV)
-            else if max(diffV) <= 0 then break false
-          ) then maxVHF#newV = {j};
+        i' := max(lb#d#i - g', 0);
+        if maxVDict'#?b' and maxVDict'#b'#?i' then (
+          for maxV' in maxVDict'#b'#i' do (
+            V0 := maxV' + V#d#i;
+            if maxVHF#?V0 then (
+              maxVHF#V0 = append( maxVHF#V0, j );
+            ) else if false =!= (
+              for V1 in keys maxVHF do (
+                Vdiff := V0 - V1;
+                if min Vdiff >= 0 then remove( maxVHF, V1 )
+                else if max Vdiff <= 0 then break false
+              )
+            ) then (
+              maxVHF#V0 = { j }
+            )
+          )
         );
         if #maxVHF === 0 then continue;
-        (keys maxVHF, unique flatten values maxVHF)
+        ( keys maxVHF, unique flatten values maxVHF )
       );
-      maxHFDict#(c-G#d) = maxVHFList / last;
+      maxHFDict#( c - G#d ) = maxVHFList / last;
       maxVHFList / first
     );
-    prevG = G#d; prevg = g#d;
+    G' = G#d;
+    g' = g#d;
     toList maxHFDict
   );
-  (prevmaxVDict#0#0, raveledHFs)
+  ( maxVDict'#0#0, raveledHFs )
 );
 
 --------------------------------------------------------------------------------
@@ -1689,11 +1812,46 @@ doc ///
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-TEST ///
-mbn = maxBettiNumbers(4,HilbertPolynomial=>4);
+TEST /// --Test a preknown result.
+N = 4;
+p = 4;
+mbn = maxBettiNumbers(N,HilbertPolynomial=>p);
 assert(mbn.BettiUpperBound === {6, 8, 3});
 ///
-TEST ///
+
+TEST /// --Test that all 8 versions of the algorithm produce the same result.
+testMatching = (N,p) -> (
+  mbn = maxBettiNumbers(N,HilbertPolynomial=>p);
+  mbn1 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"None");
+  mbn2 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"One");
+  mbn3 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"AllMaxBettiSum");
+  mbn4 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Simplified",ResultsCount=>"All");
+  mbn5 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"None");
+  mbn6 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"One");
+  mbn7 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"AllMaxBettiSum");
+  mbn8 = maxBettiNumbers(N,HilbertPolynomial=>p,
+    Algorithm=>"Complete",ResultsCount=>"All");
+  assert(mbn.BettiUpperBound === mbn1.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn2.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn3.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn4.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn5.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn6.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn7.BettiUpperBound);
+  assert(mbn.BettiUpperBound === mbn8.BettiUpperBound);
+);
+for i from 0 to 10 do testMatching(4, i);
+for i from 2 to 10 do testMatching(i, 4);
+///
+
+TEST /// --Test against brute force method
 loadPackage "StronglyStableIdeals";
 QQ[d]; p = 2*d+10; N = 5;
 time ssI = stronglyStableIdeals(p, N);
@@ -1705,7 +1863,8 @@ time maxbetti = max \ transpose (ssI / getTotalBetti_N);
 time mbn = maxBettiNumbers(N, HilbertPolynomial => p);
 assert(mbn.BettiUpperBound === maxbetti);
 ///
-TEST ///
+
+TEST /// --Test against a preknown result.
 N = 5;
 g = HilbertDifferenceLowerBound => {,,,8,8,5,5};
 G = HilbertFunctionLowerBound => {,,,,,,41};
