@@ -6,8 +6,8 @@ doc ///
       There are two algorithms that can be used to find the upper bounds given
       in @TO maxBettiNumbers@.
       
-      The ``Simplified'' algorithm simply finds the maximum of while ignoring the
-      ideal structure of an ideal. In other words, it searches all possible
+      The ``Simplified'' algorithm simply finds the maximum of while ignoring
+      the ideal structure of an ideal. In other words, it searches all possible
       numeric functions instead of just the Hilbert functions. This has two
       consequences. First, it is significantly faster because it allows for a
       simplification of the algorithm. Second, it does not always give the
@@ -18,9 +18,9 @@ doc ///
       The ``Complete'' algorithm does not make this simplification, and as a
       result, is slower but give the smallest upper bounds in every situation.
       
-      Ideally, we would like to use the ``Simplified'' algorithm when it gives the
-      smallest upper bounds, and use the ``Complete'' algorithm otherwise. By
-      default, the algorithm is selected that guarentees the smallest upper
+      Ideally, we would like to use the ``Simplified'' algorithm when it gives
+      the smallest upper bounds, and use the ``Complete'' algorithm otherwise.
+      By default, the algorithm is selected that guarentees the smallest upper
       bounds. However, this can be overridden by passing the @TT"Algorithm"@
       option to @TO maxBettiNumbers@. The possible values are
       

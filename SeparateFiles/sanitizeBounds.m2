@@ -9,7 +9,7 @@ cleanUpperBound = f -> (
     );
     bound
   ) do (
-    bound = macaulayAboveBound(bound, d)
+    bound = macaulayAboveBound( bound, d )
   )
 );
 
@@ -18,12 +18,12 @@ cleanUpperBound = f -> (
 --- macaulayBelowBound(g(d+1), d+1)
 cleanLowerBound = f -> if #f == 0 then f else (
   bound := 0;
-  reverse for d in reverse( 0 .. #f - 1) list (
+  reverse for d in reverse( 0 .. #f - 1 ) list (
     if f#d =!= null then (
       bound = max( f#d, bound )
     );
     bound
   ) do (
-    bound = macaulayBelowBound(bound, d)
+    bound = macaulayBelowBound( bound, d )
   )
 );

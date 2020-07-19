@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>Main Example</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <link type="text/css" rel="stylesheet" href="doc.css"/>
+  </head>
+  <body>
+    <table class="buttons">
+      <tr>
+        <td>
+          <div>
+<a href="___Max__Betti.html">next</a> | <a href="_lexsegment__Ideal.html">previous</a> | <a href="___Max__Betti.html">forward</a> | <a href="_lexsegment__Ideal.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
+<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="___Main_sp__Example.html" title="">Main Example</a>    </div>
+    <hr/>
+    <div>
+      <h1>Main Example</h1>
+      <div>
+        <table class="examples">
+          <tr>
+            <td>
+              <pre>i1 : QQ[d];</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i2 : result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
+       ResultsCount => &quot;All&quot;)
+
+o2 = MaxBetti{BettiUpperBound => {18, 51, 60, 33, 7}      }
+              HilbertFunctions => {{1, 6, 14, 16}    }
+                                  {{1, 6, 12, 16, 18}}
+              isRealizable => true
+              MaximalBettiNumbers => {{18, 51, 60, 33, 7}}
+              MaximumBettiSum => 169
+
+o2 : MaxBetti</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i3 : almostLexBetti_6 \ toList result.HilbertFunctions
+
+             0  1  2  3  4 5         0  1  2  3  4 5
+o3 = {total: 1 18 51 60 33 7, total: 1 18 51 60 33 7}
+          0: 1  .  .  .  . .      0: 1  .  .  .  . .
+          1: .  7 13 11  5 1      1: .  9 20 20 10 2
+          2: . 11 38 49 28 6      2: .  6 20 25 14 3
+                                  3: .  3 11 15  9 2
+
+o3 : List</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i4 : result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
+       HilbertFunctionUpperBound => {,5}, ResultsCount => &quot;All&quot;)
+
+o4 = MaxBetti{BettiUpperBound => {16, 48, 59, 33, 7}      }
+              HilbertFunctions => {{1, 5, 14, 16}}
+              isRealizable => true
+              MaximalBettiNumbers => {{16, 48, 59, 33, 7}}
+              MaximumBettiSum => 163
+
+o4 : MaxBetti</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i5 : I = almostLexIdeal(QQ[x_1..x_6], first result.HilbertFunctions)
+
+                 2     2                     2             2   3   2     2   
+o5 = ideal (x , x , x x , x x x , x x x , x x , x x x , x x , x , x x , x x ,
+             1   2   2 3   2 3 4   2 3 5   2 4   2 4 5   2 5   3   3 4   3 5 
+     ------------------------------------------------------------------------
+        2             2   3   2
+     x x , x x x , x x , x , x x )
+      3 4   3 4 5   3 5   4   4 5
+
+o5 : Ideal of QQ[x , x , x , x , x , x ]
+                  1   2   3   4   5   6</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i6 : betti res I
+
+            0  1  2  3  4 5
+o6 = total: 1 16 48 59 33 7
+         0: 1  1  .  .  . .
+         1: .  1  1  .  . .
+         2: . 14 47 59 33 7
+
+o6 : BettiTally</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i7 : hilbertPolynomial(I, Projective=>false)
+
+o7 = 2i + 10
+
+o7 : QQ[i]</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i8 : (0..6)/(d->hilbertFunction(d,I))
+
+o8 = (1, 5, 14, 16, 18, 20, 22)
+
+o8 : Sequence</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i9 : result = maxBettiNumbers(5, HilbertDifferenceLowerBound => {,,,8,8},
+       HilbertPolynomial => 5*d+11);</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i10 : sum result.BettiUpperBound
+
+o10 = 98</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i11 : result.MaximumBettiSum  -- This doesn't match the previous sum.
+
+o11 = 97</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i12 : result.isRealizable     -- As a result, this is false.
+
+o12 = false</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i13 : N = 5;</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i14 : g = HilbertDifferenceLowerBound => {,,,8,8,5,5};</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i15 : G = HilbertFunctionLowerBound => {,,,,,,41};</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i16 : F = HilbertFunctionUpperBound => {,,,,,,41};</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i17 : p = HilbertPolynomial => 49;</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i18 : maxBettiNumbers(N,p,g,G,F)
+
+o18 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}}
+               isRealizable => false
+               MaximumBettiSum => 137
+
+o18 : MaxBetti</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i19 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;One&quot;)
+
+o19 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                         }
+               HilbertFunctions => {{1, 5, 11, 21, 30, 36, 41, 46, 49, 49}}
+               isRealizable => false
+               MaximumBettiSum => 137
+
+o19 : MaxBetti</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i20 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;AllMaxBettiSum&quot;)
+
+o20 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                                                 }
+               HilbertFunctions => {{1, 5, 11, 21, 30, 36, 41, 42, 43, 44, 45, 46, 47, 48, 49, 49}}
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 44, 45, 46, 47, 48, 49, 49}    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 45, 46, 47, 48, 49, 49}        }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 45, 46, 47, 48, 49, 49}        }
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 45, 47, 48, 49, 49}            }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 46, 47, 48, 49, 49}            }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 46, 47, 48, 49, 49}            }
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 45, 47, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 46, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 47, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 47, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 46, 47, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 47, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 47, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 48, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 46, 48, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 49, 49}                        }
+                                   {{1, 5, 11, 21, 30, 36, 41, 46, 49, 49}                        }
+               isRealizable => false
+               MaximumBettiSum => 137
+
+o20 : MaxBetti</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i21 : maxBettiNumbers(N,p,g,G,F, ResultsCount=>&quot;All&quot;)
+
+o21 = MaxBetti{BettiUpperBound => {23, 54, 47, 14}                                                 }
+               HilbertFunctions => {{1, 5, 15, 23, 31, 36, 41, 42, 43, 44, 45, 46, 47, 48, 49, 49}}
+                                   {{1, 5, 11, 21, 30, 36, 41, 42, 43, 44, 45, 46, 47, 48, 49, 49}}
+                                   {{1, 5, 15, 23, 31, 36, 41, 43, 44, 45, 46, 47, 48, 49, 49}    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 44, 45, 46, 47, 48, 49, 49}    }
+                                   {{1, 5, 15, 23, 31, 36, 41, 43, 45, 46, 47, 48, 49, 49}        }
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 45, 46, 47, 48, 49, 49}        }
+                                   {{1, 5, 15, 23, 31, 36, 41, 44, 45, 46, 47, 48, 49, 49}        }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 45, 46, 47, 48, 49, 49}        }
+                                   {{1, 5, 15, 23, 31, 36, 41, 43, 45, 47, 48, 49, 49}            }
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 45, 47, 48, 49, 49}            }
+                                   {{1, 5, 15, 23, 31, 36, 41, 44, 46, 47, 48, 49, 49}            }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 46, 47, 48, 49, 49}            }
+                                   {{1, 5, 15, 23, 31, 36, 41, 45, 46, 47, 48, 49, 49}            }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 46, 47, 48, 49, 49}            }
+                                   {{1, 5, 15, 23, 31, 36, 41, 43, 45, 47, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 43, 45, 47, 49, 49}                }
+                                   {{1, 5, 15, 23, 31, 36, 41, 44, 46, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 46, 48, 49, 49}                }
+                                   {{1, 5, 15, 23, 31, 36, 41, 44, 47, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 47, 48, 49, 49}                }
+                                   {{1, 5, 15, 23, 31, 36, 41, 45, 47, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 47, 48, 49, 49}                }
+                                   {{1, 5, 15, 23, 31, 36, 41, 46, 47, 48, 49, 49}                }
+                                   {{1, 5, 11, 21, 30, 36, 41, 46, 47, 48, 49, 49}                }
+                                   {{1, 5, 15, 23, 31, 36, 41, 44, 47, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 44, 47, 49, 49}                    }
+                                   {{1, 5, 15, 23, 31, 36, 41, 45, 47, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 47, 49, 49}                    }
+                                   {{1, 5, 15, 23, 31, 36, 41, 45, 48, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 48, 49, 49}                    }
+                                   {{1, 5, 15, 23, 31, 36, 41, 46, 48, 49, 49}                    }
+                                   {{1, 5, 11, 21, 30, 36, 41, 46, 48, 49, 49}                    }
+                                   {{1, 5, 15, 23, 31, 36, 41, 45, 49, 49}                        }
+                                   {{1, 5, 11, 21, 30, 36, 41, 45, 49, 49}                        }
+                                   {{1, 5, 15, 23, 31, 36, 41, 46, 49, 49}                        }
+                                   {{1, 5, 11, 21, 30, 36, 41, 46, 49, 49}                        }
+               isRealizable => false
+               MaximalBettiNumbers => {{23, 54, 45, 13}}
+                                      {{22, 54, 47, 14}}
+               MaximumBettiSum => 137
+
+o21 : MaxBetti</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i22 : maxBettiNumbers(N,p,g,G,F, Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;One&quot;)
+
+o22 = MaxBetti{BettiUpperBound => {24, 57, 50, 15}                     }
+               HilbertFunctions => {{1, 5, 11, 21, 30, 36, 41, 49, 49}}
+               isRealizable => false
+               MaximumBettiSum => 145
+
+o22 : MaxBetti</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i23 : p = HilbertPolynomial => 3*d^2-6*d+175;</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i24 : first timing maxBettiNumbers(6, p,
+        Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;None&quot;)
+
+o24 = 5.908441668
+
+o24 : RR (of precision 53)</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i25 : first timing maxBettiNumbers(6, p,
+        Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;All&quot;)
+
+o25 = 7.467646269
+
+o25 : RR (of precision 53)</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i26 : first timing maxBettiNumbers(6, p,
+        Algorithm=>&quot;Complete&quot;, ResultsCount=>&quot;None&quot;)
+
+o26 = 21.462211888
+
+o26 : RR (of precision 53)</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <pre>i27 : first timing maxBettiNumbers(6, p,
+        Algorithm=>&quot;Complete&quot;, ResultsCount=>&quot;All&quot;)
+
+o27 = 28.756055662
+
+o27 : RR (of precision 53)</pre>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+
+</html>

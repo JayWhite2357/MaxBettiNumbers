@@ -7,7 +7,7 @@
 ---   Dict#b#i instead of (d,c,j) and
 ---   Dict'#b'#i' instead of (d-1,c',j')
 
-CompleteNone = ( G, F, g, f, V, lb ) -> (
+CompleteNone = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { V#0#0 } };
   G' := 0;
   g' := 0;
@@ -19,7 +19,7 @@ CompleteNone = ( G, F, g, f, V, lb ) -> (
       reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
         b' := c - j - G';
         i := j - g#d;
-        i' := max( lb#d#i - g', 0 );
+        i' := max( lowerBound#d#i - g', 0 );
         if maxVDict'#?b' and maxVDict'#b'#?i' then (
           V0 := maxVDict'#b'#i' + V#d#i;
           if maxV === null then (

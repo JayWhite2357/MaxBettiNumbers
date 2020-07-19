@@ -409,35 +409,35 @@ o22 : MaxBetti</pre>
         <table class="examples">
           <tr>
             <td>
-              <pre>i27 : p = HilbertPolynomial => 3*d^2-6*d+175;
+              <pre>i23 : p = HilbertPolynomial => 3*d^2-6*d+175;
 
-i28 : first timing maxBettiNumbers(6, p,
+i24 : first timing maxBettiNumbers(6, p,
         Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;None&quot;)
 
-o28 = 5.207294879
+o24 = 5.908441668
 
-o28 : RR (of precision 53)
+o24 : RR (of precision 53)
 
-i29 : first timing maxBettiNumbers(6, p,
+i25 : first timing maxBettiNumbers(6, p,
         Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;All&quot;)
 
-o29 = 6.675004686
+o25 = 7.467646269
 
-o29 : RR (of precision 53)
+o25 : RR (of precision 53)
 
-i30 : first timing maxBettiNumbers(6, p,
+i26 : first timing maxBettiNumbers(6, p,
         Algorithm=>&quot;Complete&quot;, ResultsCount=>&quot;None&quot;)
 
-o30 = 20.432215378
+o26 = 21.462211888
 
-o30 : RR (of precision 53)
+o26 : RR (of precision 53)
 
-i31 : first timing maxBettiNumbers(6, p,
+i27 : first timing maxBettiNumbers(6, p,
         Algorithm=>&quot;Complete&quot;, ResultsCount=>&quot;All&quot;)
 
-o31 = 26.732769924
+o27 = 28.756055662
 
-o31 : RR (of precision 53)</pre>
+o27 : RR (of precision 53)</pre>
             </td>
           </tr>
         </table>

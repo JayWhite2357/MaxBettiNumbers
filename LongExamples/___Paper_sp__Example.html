@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
-    <title>Large Example</title>
+    <title>Paper Example</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
     <link type="text/css" rel="stylesheet" href="doc.css"/>
   </head>
@@ -11,15 +11,15 @@
       <tr>
         <td>
           <div>
-<a href="_lex__Betti.html">next</a> | <a href="_is__Realizable.html">previous</a> | <a href="_lex__Betti.html">forward</a> | <a href="_is__Realizable.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
+<a href="___Results__Count.html">next</a> | <a href="___Maximum__Betti__Sum.html">previous</a> | <a href="___Results__Count.html">forward</a> | <a href="___Maximum__Betti__Sum.html">backward</a> | up | <a href="index.html">top</a> | <a href="master.html">index</a> | <a href="toc.html">toc</a> | <a href="http://www.math.uiuc.edu/Macaulay2/">Macaulay2 web site</a>          </div>
         </td>
       </tr>
     </table>
     <div>
-<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="___Large_sp__Example.html" title="">Large Example</a>    </div>
+<a href="index.html" title="Methods to find maximum Betti numbers given bounds on the Hilbert function.">MaxBettiNumbers</a> :: <a href="___Paper_sp__Example.html" title="">Paper Example</a>    </div>
     <hr/>
     <div>
-      <h1>Large Example</h1>
+      <h1>Paper Example</h1>
       <div>
         <table class="examples">
           <tr>
@@ -208,25 +208,25 @@ o12 : MaxBetti</pre>
           <tr>
             <td>
               <pre>i16 : time maxBettiNumbers(N, p, Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;None&quot;);
-     -- used 6.13375 seconds</pre>
+     -- used 5.82732 seconds</pre>
             </td>
           </tr>
           <tr>
             <td>
               <pre>i17 : time maxBettiNumbers(N, p, Algorithm=>&quot;Simplified&quot;, ResultsCount=>&quot;All&quot;);
-     -- used 7.67109 seconds</pre>
+     -- used 7.40666 seconds</pre>
             </td>
           </tr>
           <tr>
             <td>
               <pre>i18 : time maxBettiNumbers(N, p, Algorithm=>&quot;Complete&quot;, ResultsCount=>&quot;None&quot;);
-     -- used 22.3046 seconds</pre>
+     -- used 21.4503 seconds</pre>
             </td>
           </tr>
           <tr>
             <td>
               <pre>i19 : time maxBettiNumbers(N, p, Algorithm=>&quot;Complete&quot;, ResultsCount=>&quot;All&quot;);
-     -- used 30.3496 seconds</pre>
+     -- used 28.4778 seconds</pre>
             </td>
           </tr>
           <tr>
@@ -242,7 +242,7 @@ o20 : Package</pre>
             <td>
               <pre>i21 : benchmark(&quot;maxBettiNumbers(5, HilbertPolynomial => 25)&quot;)
 
-o21 = .0883077906249999
+o21 = .0894562386249997
 
 o21 : RR (of precision 53)</pre>
             </td>
@@ -251,7 +251,7 @@ o21 : RR (of precision 53)</pre>
             <td>
               <pre>i22 : benchmark(&quot;stronglyStableIdeals(25, 5)&quot;)
 
-o22 = 67.736935897
+o22 = 61.856958304
 
 o22 : RR (of precision 53)</pre>
             </td>

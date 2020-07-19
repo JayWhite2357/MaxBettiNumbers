@@ -14,7 +14,7 @@
 ---    the shorthand b to represend c-g and i to represent j-G.
 
 
-SimplifiedNone = ( G, F, g, f, V, lb ) -> (
+SimplifiedNone = ( G, F, g, f, V, lowerBound ) -> (
   --**We initialize the base case by creating a dictionary maxVDict'
   --**  containing (-1, 0) => 0
   --- V#0#0 is the zero vector
@@ -42,7 +42,7 @@ SimplifiedNone = ( G, F, g, f, V, lb ) -> (
         --- We can ignore the situations where we violate the lower bound.
         ---   This is done by comparing the Macaulay lower bound with the
         ---   maximum j in the previous degree.
-        when maxj'#( c - j - G' ) >= lb#d#( j - g#d ) 
+        when maxj'#( c - j - G' ) >= lowerBound#d#( j - g#d ) 
         list (
           maxj#( c - G#d ) = j;
           --**Compute V0 = maxVDict(d', c') + Vq[d,j].

@@ -5,7 +5,7 @@
 ---   list of lists of lists. This "raveled" result can be unraveled with the
 ---   UnravelComplete methods.
 
-CompleteSome = ( G, F, g, f, V, lb ) -> (
+CompleteSome = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { V#0#0 } };
   G' := 0;
   g' := 0;
@@ -20,7 +20,7 @@ CompleteSome = ( G, F, g, f, V, lb ) -> (
       maxVHFList := reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
         b' := c - j - G';
         i := j - g#d;
-        i' := max( lb#d#i - g', 0 );
+        i' := max( lowerBound#d#i - g', 0 );
         --- We need to check that this is actually a valid value of j that has
         ---   any valid functions in the previous degree
         if maxVDict'#?b' and maxVDict'#b'#?i' then (

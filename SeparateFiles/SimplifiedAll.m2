@@ -1,4 +1,4 @@
-SimplifiedAll = ( G, F, g, f, V, lb ) -> (
+SimplifiedAll = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { V#0#0 } };
   G' := 0;
   F' := 0;
@@ -13,7 +13,7 @@ SimplifiedAll = ( G, F, g, f, V, lb ) -> (
       ---   The values of each key are the j's that give that value of V.
       maxVHF := new MutableHashTable;
       for j from max( g#d, c - F' ) to min( f#d, c - G' )
-      when maxj'#( c - j - G' ) >= lb#d#( j - g#d )
+      when maxj'#( c - j - G' ) >= lowerBound#d#( j - g#d )
       do (
         maxj#( c - G#d ) = j;
         --- Instead of being a vectors, maxVDict'#c' is a list of vectors.

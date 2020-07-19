@@ -50,6 +50,32 @@ MaxBetti = new Type of HashTable
 --- Functions to deal with the Macaulay Representation of a Number
 --------------------------------------------------------------------------------
 
+--- This is the macaulay representation of a. From this, it is easy to read off
+---   the max index of a monomial as well as the Macaulay upper and lower
+---   bounds.
+--- The output, rep, is a sequcne of length d
+--- a = binomial(rep#0, 1) + binomial(d + rep#d, d + 1)
+--- Note: this is a different output from most versions of this method.
+---   the reason is that this is more compact and efficient.
+--- The idea is that we want to easily increment and decrement a without
+---   recomputing the representation each time. 
+
+--- Incrementing rep: (increasing a)
+---   Find the last element equal to rep#0.
+---   Increase that element by 1 and set all preceding elements to 0
+--- Decrementing rep: (decreasing a)
+---   Find the first nonzero element
+---      Reduce it by 1
+---      Set all preceding elements to that element's new value
+--- Reading off monomial:
+---   The first nonzero element indicates the max index.
+---   Add 1 to every other nonzero element.
+---   Set all zero elements to equal the first nonzero element.
+---   Take n+1-e for each element e. This is the index of the variable.
+---   The product of all the variables is the ath last monomial,
+---      where the 1st last is the power of the last variable.
+
+
 macaulayRepresentation = ( a, d ) -> (
   v := if d <= 1 then a else 0;
   if d > 1 then (
@@ -73,14 +99,14 @@ macaulayAboveBound = ( a, d ) -> (
   if ( a === infinity or ( d === 0 and a > 0 ) ) then infinity else (
     r := macaulayRepresentation( a, d );
     sum for i to #r-1 list (
-      binomial( r#i + i + 1, i + 2)
+      binomial( r#i + i + 1, i + 2 )
     )
   )
 );
 
 macaulayBelowBound = ( a, d ) -> (
   if ( a <= 0 or d <= 0 ) then 0 else if d === 1 then 1 else (
-    r := macaulayRepresentation(a, d);
+    r := macaulayRepresentation( a, d );
     sum for i to #r-1 list (
       if r#i === 0 then 0 else (
         binomial( r#i + i - 1, i )
@@ -88,6 +114,37 @@ macaulayBelowBound = ( a, d ) -> (
     )
   )
 );
+
+decrementRep = ( rep, firstNonzeroIndex, firstNonzeroValue ) -> (
+  rep = join(
+    firstNonzeroIndex + 1 : firstNonzeroValue - 1,
+    drop( rep, firstNonzeroIndex + 1 )
+  );
+  if firstNonzeroValue === 1 then (
+    firstNonzeroIndex = firstNonzeroIndex + 1;
+    if rep#?firstNonzeroIndex then (
+      firstNonzeroValue = rep#firstNonzeroIndex;
+    )
+  ) else (
+    firstNonzeroIndex = 0;
+    firstNonzeroValue = firstNonzeroValue - 1;
+  );
+  ( rep, firstNonzeroIndex, firstNonzeroValue )
+);
+
+incrementRep = ( rep, lastrep0Index ) -> (
+  rep = join(
+    toList( lastrep0Index : 0 ),
+    { rep#0 + 1 },
+    drop( rep, lastrep0Index + 1 )
+  );
+  if lastrep0Index === 0 then (
+    while rep#?( lastrep0Index + 1 ) and
+      rep#( lastrep0Index + 1 ) === rep#0 do 
+      lastrep0Index = lastrep0Index + 1;
+  ) else lastrep0Index = lastrep0Index - 1;
+  ( rep, lastrep0Index )
+)
 
 --------------------------------------------------------------------------------
 --- End Macaulay Representation Methods
@@ -115,7 +172,7 @@ cleanUpperBound = f -> (
     );
     bound
   ) do (
-    bound = macaulayAboveBound(bound, d)
+    bound = macaulayAboveBound( bound, d )
   )
 );
 
@@ -124,13 +181,13 @@ cleanUpperBound = f -> (
 --- macaulayBelowBound(g(d+1), d+1)
 cleanLowerBound = f -> if #f == 0 then f else (
   bound := 0;
-  reverse for d in reverse( 0 .. #f - 1) list (
+  reverse for d in reverse( 0 .. #f - 1 ) list (
     if f#d =!= null then (
       bound = max( f#d, bound )
     );
     bound
   ) do (
-    bound = macaulayBelowBound(bound, d)
+    bound = macaulayBelowBound( bound, d )
   )
 );
 
@@ -139,7 +196,7 @@ cleanLowerBound = f -> if #f == 0 then f else (
 --------------------------------------------------------------------------------
 
 --- function for padding lists with null
-padList = (l, f) -> join( f, toList( l - #f : null ) );
+padList = ( l, f ) -> join( f, toList( l - #f : null ) );
 
 --------------------------------------------------------------------------------
 --- functions to sanitize the polynomial input
@@ -150,15 +207,14 @@ padList = (l, f) -> join( f, toList( l - #f : null ) );
 --- hilbert polynomial
 minPolyBoundDegree = p -> (
   n := first degree p;
-  i := (ring p)_0;
-  tmpp := p;
+  i := ( ring p )_0;
   lC := 0;
-  while (n > 0) do (
-    lC = leadCoefficient(tmpp);
-    tmpp = tmpp-binomial(n+i,n+1)+binomial(n+i-n!*lC, n+1);
-    n = first degree tmpp;
+  while n > 0 do (
+    lC = leadCoefficient p;
+    p = p - binomial( n + i, n + 1 ) + binomial( n + i - n! * lC, n + 1 );
+    n = first degree p;
   );
-  d := sub(tmpp,ZZ);
+  d := sub( p, ZZ );
   if lC > d then error "Invalid Hilbert Polynomial.";
   d
 );
@@ -166,22 +222,22 @@ minPolyBoundDegree = p -> (
 --- This function sets G,F,g,f to be the appropriate values to ensure that all
 --- ideals in the family have the specified hilbert polynomial
 --- if no polynomial is specified, nothing is done.
-cleanPolynomial = (G, F, g, f, p, d) -> (
+cleanPolynomial = ( G, F, g, f, p, d ) -> (
   if p =!= null then (
-    i := (ring p)_0;
-    pd := sub( sub( p, i => d ), ZZ);
-    pm := sub( sub( p, i => d - 1 ), ZZ);
-    deltapd := pd - pm;
-    G = padList(d + 1, G);
-    F = padList(d + 1, F);
-    g = padList(d + 1, g);
-    f = padList(d + 1, f);
-    if G_d === null or G#d < pd then G = replace(d, pd, G);
-    if F_d === null or F#d > pd then F = replace(d, pd, F);
-    if g_d === null or g#d < deltapd then g = replace(d, deltapd, g);
-    if f_d === null or f#d > deltapd then f = replace(d, deltapd, f);
+    i := ( ring p )_0;
+    pd := sub( sub( p, i => d ), ZZ );
+    pd' := sub( sub( p, i => d - 1 ), ZZ );
+    deltapd := pd - pd';
+    G = padList( d + 1, G );
+    F = padList( d + 1, F );
+    g = padList( d + 1, g );
+    f = padList( d + 1, f );
+    if G_d === null or G#d < pd then G = replace( d, pd, G );
+    if F_d === null or F#d > pd then F = replace( d, pd, F );
+    if g_d === null or g#d < deltapd then g = replace( d, deltapd, g );
+    if f_d === null or f#d > deltapd then f = replace( d, deltapd, f );
   );
-  (G, F, g, f)
+  ( G, F, g, f )
 );
 
 --------------------------------------------------------------------------------
@@ -212,14 +268,14 @@ optimizeUpperBound = ( G, F, f ) -> (
 --- This function makes two optimizations on G(d) based on the following:
 --- The smallest that H(d) could be is G(d) + g(d)
 --- The smallest that H(d) could be is G(d+1) - f(d)
-optimizeAccumulatedLowerBound = (G, g, f) -> (
+optimizeAccumulatedLowerBound = ( G, g, f ) -> (
   cumulativeSum := 0;
   G = for d to #G - 1 list (
     cumulativeSum = max( G#d, cumulativeSum + g#d )
   );
   bound := 0;
   reverse for d in reverse( 0 .. #G - 1 ) list (
-    bound = max(G#d, bound)
+    bound = max( G#d, bound )
   ) do (
     bound = bound - f#d
   )
@@ -228,14 +284,14 @@ optimizeAccumulatedLowerBound = (G, g, f) -> (
 --- This function makes two optimizations on F(d) based on the following:
 --- The largest that H(d) could be is F(d) + f(d)
 --- The largest that H(d) could be is F(d+1) - g(d)
-optimizeAccumulatedUpperBound = (F, g, f) -> (
+optimizeAccumulatedUpperBound = ( F, g, f ) -> (
   cumulativeSum := 0;
   F = for d to #F - 1 list (
     cumulativeSum = min( F#d, cumulativeSum + f#d )
   );
   bound := infinity;
   reverse for d in reverse( 0 .. #F - 1 ) list (
-    bound = min(F#d, bound)
+    bound = min( F#d, bound )
   ) do (
     bound = bound - g#d
   )
@@ -250,21 +306,21 @@ optimizeAccumulatedUpperBound = (F, g, f) -> (
 --- main function to sanitize (and optimize) the inputs
 --------------------------------------------------------------------------------
 
-sanitizeInputs = (G, F, g, f, p, n) -> (
+sanitizeInputs = ( G, F, g, f, p, n ) -> (
   --- Sanitize the polynomial input by converting it to bounds
-  D := if p === null then 0 else minPolyBoundDegree(p);
-  D = max(D, #G-1, #F-1, #g-1, #f-1);
-  (G, F, g, f) = cleanPolynomial(G, F, g, f, p, D);
+  D := if p === null then 0 else minPolyBoundDegree( p );
+  D = max( D, #G-1, #F-1, #g-1, #f-1 );
+  ( G, F, g, f ) = cleanPolynomial( G, F, g, f, p, D );
   --- End Sanitize polynomial
   
   --- Sanitize the input length so that they include at least degree 1
-  l := max(#G, #F, #g, #f, 2);
-  (G, F, g, f) = (G, F, g, f) / padList_l;
+  l := max( #G, #F, #g, #f, 2 );
+  ( G, F, g, f ) = ( G, F, g, f ) / padList_l;
   --- End Sanitize input length
   
   --- Sanitize the degree 1 upper difference bound
   if ( f#1 === null or f#1 > n + 1 ) then (
-    f = replace(1, n + 1, f)
+    f = replace( 1, n + 1, f )
   );
   --- End Sanitize degree 1
   
@@ -276,7 +332,7 @@ sanitizeInputs = (G, F, g, f, p, n) -> (
   --- End sanitize functions
   
   --- Check validity of inputs
-  valid := min(min(F - G), min(f - g)) >= 0;
+  valid := min( min( F - G ), min( f - g ) ) >= 0;
   --- End check validity
   
   --- Optimize the bounds. This drastically improves the run time.
@@ -285,21 +341,21 @@ sanitizeInputs = (G, F, g, f, p, n) -> (
   --- We repeat this process until G,F,g,f are stable.
   --- Throughout this process we check that it is always a possible scenario.
   prevGFgf := null;
-  while valid and prevGFgf =!= (G, F, g, f) do (
-    while valid and prevGFgf =!= (G, F, g, f) do (
-      prevGFgf = (G, F, g, f);
-      f = optimizeUpperBound(G, F, f);
-      g = optimizeLowerBound(G, F, g);
-      F = optimizeAccumulatedUpperBound(F, g, f);
-      G = optimizeAccumulatedLowerBound(G, g, f);
-      valid = min(min(F - G), min(f - g)) >= 0;
+  while valid and prevGFgf =!= ( G, F, g, f ) do (
+    while valid and prevGFgf =!= ( G, F, g, f ) do (
+      prevGFgf = ( G, F, g, f );
+      f = optimizeUpperBound( G, F, f );
+      g = optimizeLowerBound( G, F, g );
+      F = optimizeAccumulatedUpperBound( F, g, f );
+      G = optimizeAccumulatedLowerBound( G, g, f );
+      valid = min( min( F - G ), min( f - g ) ) >= 0;
     );
     if valid then (
       F = cleanUpperBound F;
       f = cleanUpperBound f;
       G = cleanLowerBound G;
       g = cleanLowerBound g;
-      valid = min(min(F - G), min(f - g)) >= 0;
+      valid = min( min( F - G ), min( f - g ) ) >= 0;
     )
   );
   --- End Optimize bounds
@@ -309,17 +365,18 @@ sanitizeInputs = (G, F, g, f, p, n) -> (
     error concatenate (
       "The given inputs are invalid or give impossible constraints:\nG = ",
       toString G, "\nF = ", toString F, "\ng = ", toString g, "\nf = ",
-      toString f);
+      toString f
+    );
   );
   if last G =!= last F then (
     error concatenate (
       "The given inputs don't specify constraints that eventually fix the ",
       "Hilbert function:\nG = ", toString G, "\nF = ", toString F, "\ng = ",
-      toString g, "\nf = ", toString f);
+      toString g, "\nf = ", toString f );
   );
   --- End throw error
   
-  (G, F, g, f)
+  ( G, F, g, f )
 );
 
 --------------------------------------------------------------------------------
@@ -334,53 +391,58 @@ sanitizeInputs = (G, F, g, f, p, n) -> (
 
 
 --------------------------------------------------------------------------------
---- Functions to build V and lb for use in the algorithms.
+--- Functions to build V and lowerBound for use in the algorithms.
 --------------------------------------------------------------------------------
 
-BuildVLowerBound = (g, f, n) -> (
+--- We precompute the V_q values as well as the Macaulay lower bound.
+---   Doing this ahead of time saves a ton of repitition.
+--- We are setting V#d#(j - g#d) = V_q[d, j]
+--- We are setting lowerBound#d#(j - g#d) = [j]_<d>
+--- Although we could compute these directly, the following is a more efficient
+---   way of computing them iteratively.
+BuildVLowerBound = ( g, f, n ) -> (
+  --- Make a list of all possible vectors. This way we don't have to compute
+  ---   binomials repeatedly
   Vi := for i to n list (
-    (v -> append( v, sum v )) for q to n list (
+    --- The next line takes the sum of the for loop and appends it to the end;
+    ---   there might be a neater way to do this, but I can't find one.
+    ( v -> append( v, sum v ) ) for q to n list (
       binomial( n + 1, q + 1 ) - binomial( i + 1, q + 1 )
     )
   );
+  --- This is one of our outputs that we will populate.
   V := for d to #g - 1 list new MutableList from g#d .. f#d;
+  --- This is the other output that we will populate.
   lowerBound := for d to #g - 1 list new MutableList from g#d .. f#d;
   for d to #g - 1 do (
-    VAccumulated := Vi#n; -- This is simply the zero vector.
+    VAccumulated := Vi#n; -- This is simply the zero vector to start.
+    --- begin initialize the macaulay representation
     rep := macaulayRepresentation( g#d, d );
+    --- initialize the lastrep0Index to be the last index in rep that equals
+    ---   rep#0.
+    lastrep0Index := 0;
+    while rep#?( lastrep0Index + 1 ) and
+      rep#( lastrep0Index + 1 ) === rep#0 do 
+      lastrep0Index = lastrep0Index + 1;
+    --- end initialize lastrep0Index
     nextLowerBound := macaulayBelowBound( g#d, d );
-    rep0 := 0;
-    repIndex := 0;
-    for k to f#d-g#d do (
-      VAccumulated = VAccumulated + Vi#(n - rep0);
+    nextrep0 := 0;
+    for k to f#d - g#d do (
+      --- the index of the monomial is n - nextrep0.
+      VAccumulated = VAccumulated + Vi#( n - nextrep0 );
       V#d#k = VAccumulated;
       lowerBound#d#k = nextLowerBound;
-      if rep#?0 then (
-        rep0 = rep#0;
-      ) else (
-        continue
-      );
-      if rep0 === 0 then nextLowerBound = nextLowerBound + 1;
-      -- Begin increment rep
-      if repIndex === 0 then (
-        while rep#?repIndex and rep#repIndex === rep0 do (
-          repIndex = repIndex + 1
-        )
-      );
-      repIndex = repIndex - 1;
-      rep = join(
-        toList( repIndex : 0 ),
-        { rep0 + 1 },
-        drop( rep, repIndex + 1 )
-      );
-      -- End increment rep
+      if #rep === 0 then continue;
+      nextrep0 = rep#0;
+      if nextrep0 === 0 then nextLowerBound = nextLowerBound + 1;
+      ( rep, lastrep0Index ) = incrementRep( rep, lastrep0Index );
     )
   );
-  (V, lowerBound)
+  ( V, lowerBound )
 )
 
 --------------------------------------------------------------------------------
---- End functions for building V and lb
+--- End functions for building V and lowerBound
 --------------------------------------------------------------------------------
 
 
@@ -410,7 +472,7 @@ BuildVLowerBound = (g, f, n) -> (
 ---    the shorthand b to represend c-g and i to represent j-G.
 
 
-SimplifiedNone = ( G, F, g, f, V, lb ) -> (
+SimplifiedNone = ( G, F, g, f, V, lowerBound ) -> (
   --**We initialize the base case by creating a dictionary maxVDict'
   --**  containing (-1, 0) => 0
   --- V#0#0 is the zero vector
@@ -438,7 +500,7 @@ SimplifiedNone = ( G, F, g, f, V, lb ) -> (
         --- We can ignore the situations where we violate the lower bound.
         ---   This is done by comparing the Macaulay lower bound with the
         ---   maximum j in the previous degree.
-        when maxj'#( c - j - G' ) >= lb#d#( j - g#d ) 
+        when maxj'#( c - j - G' ) >= lowerBound#d#( j - g#d ) 
         list (
           maxj#( c - G#d ) = j;
           --**Compute V0 = maxVDict(d', c') + Vq[d,j].
@@ -474,7 +536,7 @@ SimplifiedNone = ( G, F, g, f, V, lb ) -> (
 --- Note, the last element of the V vectors is the sum of the Vq's, which is why
 ---   we use that element for tracking HF.
 
-SimplifiedSome = (G, F, g, f, V, lb) -> (
+SimplifiedSome = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { V#0#0 };
   G' := 0;
   F' := 0;
@@ -491,7 +553,7 @@ SimplifiedSome = (G, F, g, f, V, lb) -> (
       --- However, we can still utilize max \ transpose to maximize the vectors
       maxV := max \ transpose (
         for j from max( g#d, c - F' ) to min( f#d, c - G' )
-        when maxj'#( c - j - G' ) >= lb#d#( j - g#d ) list (
+        when maxj'#( c - j - G' ) >= lowerBound#d#( j - g#d ) list (
           maxj#( c - G#d ) = j;
           V0 := maxVDict'#( c - j - G' ) + V#d#( j - g#d );
           if last V0 === maxSum then (
@@ -523,7 +585,7 @@ SimplifiedSome = (G, F, g, f, V, lb) -> (
 --- Simplified Method returning all hilbert Functions
 --------------------------------------------------------------------------------
 
-SimplifiedAll = ( G, F, g, f, V, lb ) -> (
+SimplifiedAll = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { V#0#0 } };
   G' := 0;
   F' := 0;
@@ -538,7 +600,7 @@ SimplifiedAll = ( G, F, g, f, V, lb ) -> (
       ---   The values of each key are the j's that give that value of V.
       maxVHF := new MutableHashTable;
       for j from max( g#d, c - F' ) to min( f#d, c - G' )
-      when maxj'#( c - j - G' ) >= lb#d#( j - g#d )
+      when maxj'#( c - j - G' ) >= lowerBound#d#( j - g#d )
       do (
         maxj#( c - G#d ) = j;
         --- Instead of being a vectors, maxVDict'#c' is a list of vectors.
@@ -591,7 +653,7 @@ SimplifiedAll = ( G, F, g, f, V, lb ) -> (
 ---   Dict#b#i instead of (d,c,j) and
 ---   Dict'#b'#i' instead of (d-1,c',j')
 
-CompleteNone = ( G, F, g, f, V, lb ) -> (
+CompleteNone = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { V#0#0 } };
   G' := 0;
   g' := 0;
@@ -603,7 +665,7 @@ CompleteNone = ( G, F, g, f, V, lb ) -> (
       reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
         b' := c - j - G';
         i := j - g#d;
-        i' := max( lb#d#i - g', 0 );
+        i' := max( lowerBound#d#i - g', 0 );
         if maxVDict'#?b' and maxVDict'#b'#?i' then (
           V0 := maxVDict'#b'#i' + V#d#i;
           if maxV === null then (
@@ -649,7 +711,7 @@ CompleteNone = ( G, F, g, f, V, lb ) -> (
 ---   list of lists of lists. This "raveled" result can be unraveled with the
 ---   UnravelComplete methods.
 
-CompleteSome = ( G, F, g, f, V, lb ) -> (
+CompleteSome = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { V#0#0 } };
   G' := 0;
   g' := 0;
@@ -664,7 +726,7 @@ CompleteSome = ( G, F, g, f, V, lb ) -> (
       maxVHFList := reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
         b' := c - j - G';
         i := j - g#d;
-        i' := max( lb#d#i - g', 0 );
+        i' := max( lowerBound#d#i - g', 0 );
         --- We need to check that this is actually a valid value of j that has
         ---   any valid functions in the previous degree
         if maxVDict'#?b' and maxVDict'#b'#?i' then (
@@ -712,7 +774,7 @@ CompleteSome = ( G, F, g, f, V, lb ) -> (
 ---   it is simply a combination of the techniques in CompleteSome and
 ---   SimplifiedAll.
 
-CompleteAll = ( G, F, g, f, V, lb ) -> (
+CompleteAll = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { { V#0#0 } } };
   G' := 0;
   g' := 0;
@@ -723,7 +785,7 @@ CompleteAll = ( G, F, g, f, V, lb ) -> (
       maxVHFList := reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
         b' := c - j - G';
         i := j - g#d;
-        i' := max(lb#d#i - g', 0);
+        i' := max( lowerBound#d#i - g', 0 );
         if maxVDict'#?b' and maxVDict'#b'#?i' then (
           for maxV' in maxVDict'#b'#i' do (
             V0 := maxV' + V#d#i;
@@ -768,86 +830,97 @@ CompleteAll = ( G, F, g, f, V, lb ) -> (
 --- functions for extracting hilbert function from the algorithm's return value
 --------------------------------------------------------------------------------
 
-UnravelSimplifiedHFs = (HFs, G, g, lb) -> (
-  partialUnraveled := {(last G,{})};
-  isFirst := true;
-  while HFs#?0 do (
-    partialUnraveled = flatten for p in partialUnraveled list (
-      minh := if isFirst then 0 else (last lb)#(p#1#0 - last g);
-      for h in (last HFs)#(p#0 - last G) list (
-        if h < minh then continue;
-        (p#0 - h, if h === minh and #p#1 === 1 then {h} else prepend(h, p#1))
-      )
+--- This method unravels a single hilbert function from the raveled result
+---   returned from the Simplified algorithm.
+
+UnravelSimplifiedOne = ( HFs, G, g, lowerBound ) -> (
+  targetSum := last G;
+  lowerBound' := 0;
+  result := { };
+  for d in reverse( 0 .. #HFs - 1 ) do (
+    --- In this version, we take the minimum hilbert function at this degree.
+    ---   This is guarenteed to give a valid result in the Simplified case.
+    ---   (In the Complete case, it gives a valid result because only valid
+    ---   results are stored in raveledHFs.)
+    hd := min( HFs#d#( targetSum - G#d ) );
+    targetSum = targetSum - hd;
+    result = (
+      --- We don't really start saving the hilbert function until the Macaulay
+      ---   bound is a strict inequality.
+      if ( #result === 1 and lowerBound' === hd ) then { hd }
+      else prepend( hd, result )
     );
-    HFs = drop(HFs, -1);
-    G = drop(G, -1);
-    if isFirst then (
-      isFirst = false;
-    ) else (
-      g = drop(g, -1);
-      lb = drop(lb, -1);
-    );
+    lowerBound' = lowerBound#d#( hd - g#d );
   );
-  partialUnraveled / last
+  { result }
 );
 
-
-UnravelCompleteHFs = (HFs, G, g, lb) -> (
-  partialUnraveled := {(last G,{})};
-  isFirst := true;
-  while HFs#?0 do (
-    partialUnraveled = flatten for p in partialUnraveled list (
-      minh := 0;
-      if not isFirst then (
-        minh = (last lb)#(p#1#0 - last g);
-      );
-      for h in (last HFs)#(p#0 - last G)#(max(minh - g#(-2), 0)) list (
-        if h < minh then continue;
-        (p#0 - h, if h === minh and #p#1 === 1 then {h} else prepend(h, p#1))
+--- This is essentially the same as UnravelSimplifiedOne. The only difference is
+---   that we track all possible triples (targetSum, lowerBound', result).
+---   The list of these is kept in partialUnraveled, which is looped over for
+---   each degree. Additionally, all possible values for the hilbert function
+---   are considered, and not simply the minimum.
+UnravelSimplifiedHFs = ( HFs, G, g, lowerBound ) -> (
+  partialUnraveled := { ( last G, 0, { } ) };
+  for d in reverse( 0 .. #HFs - 1 ) do (
+    partialUnraveled = flatten for tlr in partialUnraveled list (
+      ( targetSum, lowerBound', result ) := tlr;
+      if targetSum < G#d then continue;
+      for hd in HFs#d#( targetSum - G#d ) list (
+        if hd < lowerBound' then continue;
+        (
+          targetSum - hd,
+          lowerBound#d#( hd - g#d ),
+          if ( #result === 1 and lowerBound' === hd ) then { hd }
+          else prepend( hd, result )
+        )
       )
-    );
-    HFs = drop(HFs, -1);
-    G = drop(G, -1);
-    if isFirst then (
-      isFirst = false;
-    ) else (
-      g = drop(g, -1);
-      lb = drop(lb, -1);
     )
   );
   partialUnraveled / last
 );
 
-
-UnravelSimplifiedOne = (HFs, G, g, lb) -> (
-  targetSum := last G; result := {};
-  for d in reverse( 0..#HFs-1 ) do (
-    hd := min( HFs#d#( targetSum - G#d ) );
-    targetSum = targetSum - hd;
-    if ( #result === 1 and lb#( d + 1 )#( result#0 - g#( d+1 ) ) === hd ) then (
-      result = {}
-    );
-    result = prepend(hd, result);
+--- In this Complete case, this gives a valid result because only valid results
+---   are stored in raveledHFs, since we have the extra "k" index.
+--- The only difference from UnravelSimplifiedOne is the lowerBound' - g#d index
+UnravelCompleteOne = ( HFs, G, g, lowerBound ) -> (
+  targetSum := last G;
+  lowerBound' := 0;
+  result := { };
+  for d in reverse( 0 .. #HFs - 1 ) do (
+    --- The only difference from UnravelSimplifiedOne is the lowerBound' - g#d
+    hd := min( HFs#d#( targetSum - G#d )#( lowerBound' - g#d ) );
+    ( targetSum, lowerBound', result ) =
+    (
+      targetSum - hd,
+      lowerBound#d#( hd - g#d ),
+      if ( #result === 1 and lowerBound' === hd ) then { hd }
+      else prepend( hd, result )
+    )
   );
-  {result}
+  { result }
 );
 
-
-
-UnravelCompleteOne = (HFs, G, g, lb) -> (
-  targetSum := last G; result := {}; lastlb := 0;
-  for d in reverse( 0..#HFs-1 ) do (
-    hd := min( HFs#d#( targetSum - G#d )#lastlb );
-    targetSum = targetSum - hd;
-    if ( #result === 1 ) then (
-      lastlb = lb#( d + 1 )#( result#0 - g#( d+1 ) );
-      if ( lastlb === hd ) then (
-        result = {}
+--- The only difference from UnravelSimplifiedHFs is the lowerBound' - g#d index
+UnravelCompleteHFs = ( HFs, G, g, lowerBound ) -> (
+  partialUnraveled := { ( last G, 0, { } ) };
+  for d in reverse( 0 .. #HFs - 1 ) do (
+    partialUnraveled = flatten for tlr in partialUnraveled list (
+      ( targetSum, lowerBound', result ) := tlr;
+      if targetSum < G#d then continue;
+      --- The only difference from UnravelSimplifiedHFs is the lowerBound' - g#d
+      for hd in HFs#d#( targetSum - G#d )#( max( lowerBound' - g#d, 0 ) ) list (
+        if hd < lowerBound' then continue;
+        (
+          targetSum - hd,
+          lowerBound#d#( hd - g#d ),
+          if ( #result === 1 and lowerBound' === hd ) then { hd }
+          else prepend( hd, result )
+        )
       )
-    );
-    result = prepend(hd, result);
+    )
   );
-  {result}
+  partialUnraveled / last
 );
 
 --------------------------------------------------------------------------------
@@ -859,110 +932,112 @@ UnravelCompleteOne = (HFs, G, g, lb) -> (
 --- auxillary methods
 --------------------------------------------------------------------------------
 
-lexBetti = method( Options => {
-  AsTally => true
-} );
--- Computes the betti numbers of the lex ideal with the given hilbert function.
-lexBetti (ZZ, List) := o -> (numberOfVariables, h) -> (
-  n := numberOfVariables - 1;
-  result := lexBettiNum(h, n);
-  if o.AsTally === true then (
-    new BettiTally from flatten append(for row in pairs(result) list (
-      d := row_0 - 1;
-      for col in pairs(row_1) list (
-        if col_1 === 0 then continue;
-        i := col_0 + 1;
-        (i, {d + i}, d + i) => col_1
-      )
-    ), (0,{0},0) => 1)
-  ) else result
-);
-
-almostLexBetti = method( Options => {
-  AsTally => true
-} );
-almostLexBetti (ZZ, List) := o -> (numberOfVariables, h) ->
-  lexBetti(numberOfVariables - 1, h - prepend(0,drop(h,-1)), o);
-
-
-lexBettiNum = (h, n) -> (
-  b := for i to n list for q to n list binomial(i, q);
-  z := for i to n list 0;
-  if not h#?0 then return {z} else if h#0 === 0 then return {b#0};
-  if h#0 > 1 or min(h)<0 then error("Not a valid Hilbert function.");
-  rep := {n + 1};
-  nonzeroidx := 0;
-  maxni := n + 1;
-  for d to #h-1 list if d === 0 then z else (
-    fd := sum for i to #rep-1 list binomial(rep#i+i,i+1);
-    if h#d > fd then error("Not a valid Hilbert function.");
-    s := z;
-    for l from h#d to fd - 1 do (
-      s = s + b#(n+1-maxni);
-      rep = join(toList((nonzeroidx + 1):(maxni - 1)), drop(rep, nonzeroidx + 1));
-      if maxni === 1 then (
-        nonzeroidx = nonzeroidx + 1;
-        if rep#?nonzeroidx then maxni = rep#nonzeroidx;
-      ) else (
-        nonzeroidx = 0;
-        maxni = maxni - 1;
-      );
+--- This is an efficient way of computing the betti numbers of a lexsegment
+---   Instead of computing the actual ideal, we loop through each degree and
+---   use the max index of the monomial
+---   once we have enough monomials in that degree, we move up to the next
+---   degree
+--- The returned values are the sums of the binomial coefficients of the
+---   generators in each degree. They are exactly the values in the
+---   Eliahou-Kervaire resolution.
+lexBettiArray = ( h, n ) -> (
+  b := for i to n list for q to n list binomial( i, q );
+  zeroList := for i to n list 0;
+  if not h#?0 then return { zeroList } else if h#0 === 0 then return { b#0 };
+  if h#0 > 1 or min h < 0 then error( "Not a valid Hilbert function." );
+  ( rep, firstNonzeroIndex, firstNonzeroValue ) :=
+    ( { n + 1 }, 0, n + 1 );
+  for d to #h - 1 list if d === 0 then zeroList else (
+    upperBound := sum for i to #rep - 1 list binomial( rep#i + i, i + 1 );
+    if h#d > upperBound then error( "Not a valid Hilbert function." );
+    s := zeroList;
+    for l from h#d to upperBound - 1 do (
+      s = s + b#( n + 1 - firstNonzeroValue );
+      ( rep, firstNonzeroIndex, firstNonzeroValue ) = 
+        decrementRep( rep, firstNonzeroIndex, firstNonzeroValue );
     );
     s
-  ) do (
-    if d =!= 0 then (
-      rep = prepend(0, rep);
-      nonzeroidx = nonzeroidx + 1
-    )
+  ) do if d =!= 0 then (
+    --- move rep up one degree
+    rep = prepend( 0, rep );
+    firstNonzeroIndex = firstNonzeroIndex + 1
+    --- end move rep degree
   )
 );
 
 
--- Note: n is one less than the number of variables.
-lexsegmentIdealHelper = (S, h, n) -> (
+--- Note: n is one less than the number of variables.
+--- Additionally, S can have many more variables than we need. We only use the
+---   first n+1 variables.
+--- This is exactly the same algorithm as lexBettiArray, however, we generate
+---   the monomials themselves instead of just the binomial coefficients of the
+---   max index.
+createLexIdeal = ( S, h, n ) -> (
   if not h#?0 then return ideal 0_S else if h#0 === 0 then return ideal 1_S;
-  if h#0 > 1 or min(h)<0 then error("Not a valid Hilbert function.");
-  rep := {n + 1};
-  nonzeroidx := 0;
-  maxni := n + 1;
-  gs := flatten for d to #h-1 list if d === 0 then {} else (
-    fd := sum for i to #rep-1 list binomial( rep#i + i, i + 1 );
-    if h#d > fd then error("Not a valid Hilbert function.");
-    for l from h#d to fd - 1 list (
-      product for i to d-1 list S_(
+  if h#0 > 1 or min h < 0 then error( "Not a valid Hilbert function." );
+  ( rep, firstNonzeroIndex, firstNonzeroValue ) :=
+    ( { n + 1 }, 0, n + 1 );
+  gs := flatten for d to #h - 1 list if d === 0 then { } else (
+    upperBound := sum for i to #rep - 1 list binomial( rep#i + i, i + 1 );
+    if h#d > upperBound then error( "Not a valid Hilbert function." );
+    for l from h#d to upperBound - 1 list (
+      product for i to d - 1 list S_(
         n + 1 - (
-          if rep#i === 0 then maxni
-          else if i === 0 or rep#(i-1) === 0 then rep#i
+          if rep#i === 0 then firstNonzeroValue
+          else if i === 0 or rep#( i - 1 ) === 0 then rep#i
           else rep#i + 1
         )
       )
     ) do (
-      rep = join(toList((nonzeroidx + 1):(maxni - 1)), drop(rep, nonzeroidx + 1));
-      if maxni === 1 then (
-        nonzeroidx = nonzeroidx + 1;
-        if rep#?nonzeroidx then maxni = rep#nonzeroidx;
-      ) else (
-        nonzeroidx = 0;
-        maxni = maxni - 1;
-      );
+      ( rep, firstNonzeroIndex, firstNonzeroValue ) = 
+        decrementRep( rep, firstNonzeroIndex, firstNonzeroValue )
     )
-  ) do (
-    if d =!= 0 then (
-      rep = prepend(0, rep);
-      nonzeroidx = nonzeroidx + 1
-    )
+  ) do if d =!= 0 then (
+    --- move rep up one degree
+    rep = prepend( 0, rep );
+    firstNonzeroIndex = firstNonzeroIndex + 1
+    --- end move rep degree
   );
-  if #gs === 0 then ideal(0_S) else ideal gs
+  ideal if #gs === 0 then 0_S else gs
 );
 
 
+convertBettiArrayToBettiTally = array -> (
+  new BettiTally from flatten append (
+    for row in pairs array list (
+      d := row#0 - 1;
+      for col in pairs row#1 list (
+        if col#1 === 0 then continue;
+        i := col#0 + 1;
+        ( i, { d + i }, d + i ) => col#1
+      )
+    ),
+    ( 0, { 0 }, 0 ) => 1
+  )
+);
+
+
+lexBetti = method( Options => { AsTally => true } );
+lexBetti ( ZZ, List ) := o -> ( numberOfVariables, h ) -> (
+  result := lexBettiArray( h, numberOfVariables - 1 );
+  if o.AsTally === true then (
+    convertBettiArrayToBettiTally result
+  ) else (
+    result
+  )
+);
+
+almostLexBetti = method( Options => { AsTally => true } );
+almostLexBetti ( ZZ, List ) := o -> ( numberOfVariables, h ) ->
+  lexBetti( numberOfVariables - 1, h - prepend( 0, drop( h, -1 ) ), o );
+
 lexsegmentIdeal = method( TypicalValue => Ideal );
-lexsegmentIdeal (PolynomialRing, List) := (S, h) -> 
-  lexsegmentIdealHelper(S, h, dim S - 1);
+lexsegmentIdeal ( PolynomialRing, List ) := ( S, h ) -> 
+  createLexIdeal( S, h, dim S - 1 );
 
 almostLexIdeal = method( TypicalValue => Ideal );
-almostLexIdeal (PolynomialRing, List) := (S, h) -> 
-  lexsegmentIdealHelper(S, h - prepend(0,drop(h,-1)), dim S - 2);
+almostLexIdeal ( PolynomialRing, List ) := ( S, h ) -> 
+  createLexIdeal( S, h - prepend( 0, drop( h, -1 ) ), dim S - 2 );
 
 --------------------------------------------------------------------------------
 --- end auxillary methods
@@ -975,10 +1050,10 @@ almostLexIdeal (PolynomialRing, List) := (S, h) ->
 
 maxBettiNumbers = method( TypicalValue => MaxBetti, Options => {
   HilbertPolynomial => null,
-  HilbertFunctionUpperBound => {},
-  HilbertFunctionLowerBound => {},
-  HilbertDifferenceUpperBound => {},
-  HilbertDifferenceLowerBound => {},
+  HilbertFunctionUpperBound => { },
+  HilbertFunctionLowerBound => { },
+  HilbertDifferenceUpperBound => { },
+  HilbertDifferenceLowerBound => { },
   ResultsCount => "None",
   Algorithm => "Automatic"
 } );
@@ -991,10 +1066,10 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
   g := o.HilbertDifferenceLowerBound;
   f := o.HilbertDifferenceUpperBound;
   p := o.HilbertPolynomial;
-  if instance( p, ZZ ) then p = sub( p, QQ(monoid[getSymbol "i"]) );
+  if instance( p, ZZ ) then p = sub( p, QQ( monoid[ getSymbol "i" ] ) );
   algorithm :=
     if o.Algorithm === "Complete" then 1
-    else if o.Algorithm === "Simplified" or F === {} then 0
+    else if o.Algorithm === "Simplified" or F === { } then 0
     else -1;
   resultsCount := 
     if o.ResultsCount === "One" or o.ResultsCount === 1 then 1 
@@ -1009,7 +1084,7 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
   
   ---Automatically select algorithm
   if algorithm === -1 then (
-    GFgfsimplified := try sanitizeInputs( G, {}, g, f, p, n ) else null;
+    GFgfsimplified := try sanitizeInputs( G, { }, g, f, p, n ) else null;
     algorithm = if ( G, F, g, f ) ===  GFgfsimplified then 0 else 1;
   );
   algorithmToRun := {
@@ -1024,14 +1099,14 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
 
   
   ---Run Algorithm
-  ( V, lb ) := BuildVLowerBound( g, f, n );
-  result := algorithmToRun( G, F, g, f, V, lb );
+  ( V, lowerBound ) := BuildVLowerBound( g, f, n );
+  result := algorithmToRun( G, F, g, f, V, lowerBound );
   ---End Run Algorithm
   
   ---Parse Results
   hilbertFunctions :=
     if resultsCount === 0 then null 
-    else unravelToRun ( result#1, G, g, lb );
+    else unravelToRun ( result#1, G, g, lowerBound );
   bettiUpperBound := null;
   maximumBettiSum := null;
   maximalBettiNumbers := null;
@@ -1047,13 +1122,13 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
     maximumBettiSum = last result#0;
   );
   realizable := maximumBettiSum === sum bettiUpperBound;
-  bettig := sum lexBettiNum( g, n );
+  bettig := sum lexBettiArray( g, n );
   bettiUpperBound = bettiUpperBound + bettig;
   maximumBettiSum = maximumBettiSum + sum bettig;
   if maximalBettiNumbers =!= null then
     maximalBettiNumbers = maximalBettiNumbers / plus_bettig;
   if hilbertFunctions =!= null then
-    hilbertFunctions = hilbertFunctions / accumulate_(plus, 0);
+    hilbertFunctions = hilbertFunctions / accumulate_( plus, 0 );
   ---End parse results
   
   ---Format results
@@ -1080,7 +1155,7 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-beginDocumentation()
+beginDocumentation( )
 
 doc ///
   Key
@@ -1285,35 +1360,35 @@ doc ///
       Because there is no upper bound for $h_{S/I}$, both algorithms give valid
       results, and smallest possible upper bounds.
     CannedExample
-      i27 : p = HilbertPolynomial => 3*d^2-6*d+175;
+      i23 : p = HilbertPolynomial => 3*d^2-6*d+175;
 
-      i28 : first timing maxBettiNumbers(6, p,
+      i24 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Simplified", ResultsCount=>"None")
 
-      o28 = 5.207294879
+      o24 = 5.908441668
 
-      o28 : RR (of precision 53)
-
-      i29 : first timing maxBettiNumbers(6, p,
+      o24 : RR (of precision 53)
+      
+      i25 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Simplified", ResultsCount=>"All")
 
-      o29 = 6.675004686
+      o25 = 7.467646269
 
-      o29 : RR (of precision 53)
-
-      i30 : first timing maxBettiNumbers(6, p,
+      o25 : RR (of precision 53)
+      
+      i26 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Complete", ResultsCount=>"None")
 
-      o30 = 20.432215378
+      o26 = 21.462211888
 
-      o30 : RR (of precision 53)
-
-      i31 : first timing maxBettiNumbers(6, p,
+      o26 : RR (of precision 53)
+      
+      i27 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Complete", ResultsCount=>"All")
 
-      o31 = 26.732769924
+      o27 = 28.756055662
 
-      o31 : RR (of precision 53)
+      o27 : RR (of precision 53)
   Caveat
     If @TT"Algorithm=>\"Simplified\""@ is forced, this may not return valid
     Hilbert functions for some inputs.
@@ -1598,8 +1673,8 @@ doc ///
       There are two algorithms that can be used to find the upper bounds given
       in @TO maxBettiNumbers@.
       
-      The ``Simplified'' algorithm simply finds the maximum of while ignoring the
-      ideal structure of an ideal. In other words, it searches all possible
+      The ``Simplified'' algorithm simply finds the maximum of while ignoring
+      the ideal structure of an ideal. In other words, it searches all possible
       numeric functions instead of just the Hilbert functions. This has two
       consequences. First, it is significantly faster because it allows for a
       simplification of the algorithm. Second, it does not always give the
@@ -1610,9 +1685,9 @@ doc ///
       The ``Complete'' algorithm does not make this simplification, and as a
       result, is slower but give the smallest upper bounds in every situation.
       
-      Ideally, we would like to use the ``Simplified'' algorithm when it gives the
-      smallest upper bounds, and use the ``Complete'' algorithm otherwise. By
-      default, the algorithm is selected that guarentees the smallest upper
+      Ideally, we would like to use the ``Simplified'' algorithm when it gives
+      the smallest upper bounds, and use the ``Complete'' algorithm otherwise.
+      By default, the algorithm is selected that guarentees the smallest upper
       bounds. However, this can be overridden by passing the @TT"Algorithm"@
       option to @TO maxBettiNumbers@. The possible values are
       
@@ -1771,9 +1846,10 @@ doc ///
       from the package in hopes that they are useful. These functions are
       written with a concern for speed and efficiency.
 ///
-doc ///
+--- replace the following with "doc ///" to run this long example
+///
   Key
-    "Large Example"
+    "Paper Example"
   Description
     Example
       N = 5;
@@ -1798,6 +1874,47 @@ doc ///
       benchmark("maxBettiNumbers(5, HilbertPolynomial => 25)")
       benchmark("stronglyStableIdeals(25, 5)")
 ///
+--- replace the following with "doc ///" to run this long example
+///
+  Key
+    "Main Example"
+  Description
+    Example
+      QQ[d];
+      result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
+        ResultsCount => "All")
+      almostLexBetti_6 \ toList result.HilbertFunctions
+      result = maxBettiNumbers(6, HilbertPolynomial => 2*d+10,
+        HilbertFunctionUpperBound => {,5}, ResultsCount => "All")
+      I = almostLexIdeal(QQ[x_1..x_6], first result.HilbertFunctions)
+      betti res I
+      hilbertPolynomial(I, Projective=>false)
+      (0..6)/(d->hilbertFunction(d,I))
+      result = maxBettiNumbers(5, HilbertDifferenceLowerBound => {,,,8,8},
+        HilbertPolynomial => 5*d+11);
+      sum result.BettiUpperBound
+      result.MaximumBettiSum  -- This doesn't match the previous sum.
+      result.isRealizable     -- As a result, this is false.
+      N = 5;
+      g = HilbertDifferenceLowerBound => {,,,8,8,5,5};
+      G = HilbertFunctionLowerBound => {,,,,,,41};
+      F = HilbertFunctionUpperBound => {,,,,,,41};
+      p = HilbertPolynomial => 49;
+      maxBettiNumbers(N,p,g,G,F)
+      maxBettiNumbers(N,p,g,G,F, ResultsCount=>"One")
+      maxBettiNumbers(N,p,g,G,F, ResultsCount=>"AllMaxBettiSum")
+      maxBettiNumbers(N,p,g,G,F, ResultsCount=>"All")
+      maxBettiNumbers(N,p,g,G,F, Algorithm=>"Simplified", ResultsCount=>"One")
+      p = HilbertPolynomial => 3*d^2-6*d+175;
+      first timing maxBettiNumbers(6, p,
+        Algorithm=>"Simplified", ResultsCount=>"None")
+      first timing maxBettiNumbers(6, p,
+        Algorithm=>"Simplified", ResultsCount=>"All")
+      first timing maxBettiNumbers(6, p,
+        Algorithm=>"Complete", ResultsCount=>"None")
+      first timing maxBettiNumbers(6, p,
+        Algorithm=>"Complete", ResultsCount=>"All")
+///
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -1815,53 +1932,56 @@ doc ///
 TEST /// --Test a preknown result.
 N = 4;
 p = 4;
-mbn = maxBettiNumbers(N,HilbertPolynomial=>p);
-assert(mbn.BettiUpperBound === {6, 8, 3});
+mbn = maxBettiNumbers( N, HilbertPolynomial => p );
+assert( mbn.BettiUpperBound === { 6, 8, 3 } );
 ///
 
 TEST /// --Test that all 8 versions of the algorithm produce the same result.
-testMatching = (N,p) -> (
-  mbn = maxBettiNumbers(N,HilbertPolynomial=>p);
-  mbn1 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Simplified",ResultsCount=>"None");
-  mbn2 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Simplified",ResultsCount=>"One");
-  mbn3 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Simplified",ResultsCount=>"AllMaxBettiSum");
-  mbn4 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Simplified",ResultsCount=>"All");
-  mbn5 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Complete",ResultsCount=>"None");
-  mbn6 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Complete",ResultsCount=>"One");
-  mbn7 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Complete",ResultsCount=>"AllMaxBettiSum");
-  mbn8 = maxBettiNumbers(N,HilbertPolynomial=>p,
-    Algorithm=>"Complete",ResultsCount=>"All");
-  assert(mbn.BettiUpperBound === mbn1.BettiUpperBound);
-  assert(mbn.BettiUpperBound === mbn2.BettiUpperBound);
-  assert(mbn.BettiUpperBound === mbn3.BettiUpperBound);
-  assert(mbn.BettiUpperBound === mbn4.BettiUpperBound);
-  assert(mbn.BettiUpperBound === mbn5.BettiUpperBound);
-  assert(mbn.BettiUpperBound === mbn6.BettiUpperBound);
-  assert(mbn.BettiUpperBound === mbn7.BettiUpperBound);
-  assert(mbn.BettiUpperBound === mbn8.BettiUpperBound);
+testMatching = ( N, p ) -> (
+  mbn = maxBettiNumbers( N, HilbertPolynomial => p );
+  mbn1 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Simplified", ResultsCount => "None" );
+  mbn2 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Simplified", ResultsCount => "One" );
+  mbn3 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Simplified", ResultsCount => "AllMaxBettiSum" );
+  mbn4 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Simplified", ResultsCount => "All" );
+  mbn5 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Complete", ResultsCount => "None" );
+  mbn6 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Complete", ResultsCount => "One" );
+  mbn7 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Complete", ResultsCount => "AllMaxBettiSum" );
+  mbn8 = maxBettiNumbers( N, HilbertPolynomial => p,
+    Algorithm => "Complete", ResultsCount => "All" );
+  assert( mbn.BettiUpperBound === mbn1.BettiUpperBound );
+  assert( mbn.BettiUpperBound === mbn2.BettiUpperBound );
+  assert( mbn.BettiUpperBound === mbn3.BettiUpperBound );
+  assert( mbn.BettiUpperBound === mbn4.BettiUpperBound );
+  assert( mbn.BettiUpperBound === mbn5.BettiUpperBound );
+  assert( mbn.BettiUpperBound === mbn6.BettiUpperBound );
+  assert( mbn.BettiUpperBound === mbn7.BettiUpperBound );
+  assert( mbn.BettiUpperBound === mbn8.BettiUpperBound );
+  assert( sort mbn2.HilbertFunctions === sort mbn6.HilbertFunctions );
+  assert( sort mbn3.HilbertFunctions === sort mbn7.HilbertFunctions );
+  assert( sort mbn4.HilbertFunctions === sort mbn8.HilbertFunctions );
 );
-for i from 0 to 10 do testMatching(4, i);
-for i from 2 to 10 do testMatching(i, 4);
+for i from 0 to 10 do testMatching( 4, i );
+for i from 2 to 10 do testMatching( i, 4 );
 ///
 
 TEST /// --Test against brute force method
 loadPackage "StronglyStableIdeals";
 QQ[d]; p = 2*d+10; N = 5;
-time ssI = stronglyStableIdeals(p, N);
-getTotalBetti = (N, I) -> (
-  t := new Tally from (applyKeys(betti res I,first,plus));
+time ssI = stronglyStableIdeals( p, N );
+getTotalBetti = ( N, I ) -> (
+  t := new Tally from ( applyKeys( betti res I, first, plus ) );
   for i from 1 to N - 1 list t_i
 );
-time maxbetti = max \ transpose (ssI / getTotalBetti_N);
-time mbn = maxBettiNumbers(N, HilbertPolynomial => p);
-assert(mbn.BettiUpperBound === maxbetti);
+time maxbetti = max \ transpose ( ssI / getTotalBetti_N );
+time mbn = maxBettiNumbers( N, HilbertPolynomial => p );
+assert( mbn.BettiUpperBound === maxbetti );
 ///
 
 TEST /// --Test against a preknown result.
@@ -1870,38 +1990,38 @@ g = HilbertDifferenceLowerBound => {,,,8,8,5,5};
 G = HilbertFunctionLowerBound => {,,,,,,41};
 F = HilbertFunctionUpperBound => {,,,,,,41};
 p = HilbertPolynomial => 49;
-mbn1 = maxBettiNumbers(N,p,g,G,F);
-assert(mbn1.BettiUpperBound === {23,54,47,14});
-assert(mbn1.isRealizable === false);
-assert(mbn1.MaximumBettiSum === 137);
-mbn2 = maxBettiNumbers(N,p,g,G,F, ResultsCount=>"One");
-assert(#(mbn2.HilbertFunctions) === 1);
-assert(mbn1.BettiUpperBound === mbn2.BettiUpperBound);
-assert(mbn1.isRealizable === mbn2.isRealizable);
-assert(mbn1.MaximumBettiSum === mbn2.MaximumBettiSum);
+mbn1 = maxBettiNumbers( N,p,g,G,F );
+assert( mbn1.BettiUpperBound === {23,54,47,14} );
+assert( mbn1.isRealizable === false );
+assert( mbn1.MaximumBettiSum === 137 );
+mbn2 = maxBettiNumbers( N,p,g,G,F, ResultsCount => "One" );
+assert( #( mbn2.HilbertFunctions ) === 1 );
+assert( mbn1.BettiUpperBound === mbn2.BettiUpperBound );
+assert( mbn1.isRealizable === mbn2.isRealizable );
+assert( mbn1.MaximumBettiSum === mbn2.MaximumBettiSum );
 polys = mbn2.HilbertFunctions /
-  almostLexIdeal_(QQ[x_1..x_N]) /
-  hilbertPolynomial_(Projective=>false);
-assert(all(polys, p -> sub( p, ZZ )=== 49));
-mbn3 = maxBettiNumbers(N,p,g,G,F, ResultsCount=>"AllMaxBettiSum");
-assert(#(mbn3.HilbertFunctions) === 18);
-assert(mbn1.BettiUpperBound === mbn3.BettiUpperBound);
-assert(mbn1.isRealizable === mbn3.isRealizable);
-assert(mbn1.MaximumBettiSum === mbn3.MaximumBettiSum);
+  almostLexIdeal_( QQ[x_1..x_N] ) /
+  hilbertPolynomial_( Projective => false );
+assert( all( polys, p -> sub( p, ZZ )=== 49 ) );
+mbn3 = maxBettiNumbers( N,p,g,G,F, ResultsCount => "AllMaxBettiSum" );
+assert( #( mbn3.HilbertFunctions ) === 18 );
+assert( mbn1.BettiUpperBound === mbn3.BettiUpperBound );
+assert( mbn1.isRealizable === mbn3.isRealizable );
+assert( mbn1.MaximumBettiSum === mbn3.MaximumBettiSum );
 polys = mbn3.HilbertFunctions /
-  almostLexIdeal_(QQ[x_1..x_N]) /
-  hilbertPolynomial_(Projective=>false);
-assert(all(polys, p -> sub( p, ZZ )=== 49));
-mbn4 = maxBettiNumbers(N,p,g,G,F, ResultsCount=>"All");
-assert(#(mbn4.HilbertFunctions) === 36);
-assert(#(mbn4.MaximalBettiNumbers) === 2);
-assert(mbn1.BettiUpperBound === mbn4.BettiUpperBound);
-assert(mbn1.isRealizable === mbn4.isRealizable);
-assert(mbn1.MaximumBettiSum === mbn4.MaximumBettiSum);
+  almostLexIdeal_( QQ[x_1..x_N] ) /
+  hilbertPolynomial_( Projective => false );
+assert( all( polys, p -> sub( p, ZZ )=== 49 ) );
+mbn4 = maxBettiNumbers( N,p,g,G,F, ResultsCount => "All" );
+assert( #( mbn4.HilbertFunctions ) === 36 );
+assert( #( mbn4.MaximalBettiNumbers ) === 2 );
+assert( mbn1.BettiUpperBound === mbn4.BettiUpperBound );
+assert( mbn1.isRealizable === mbn4.isRealizable );
+assert( mbn1.MaximumBettiSum === mbn4.MaximumBettiSum );
 polys = mbn4.HilbertFunctions /
-  almostLexIdeal_(QQ[x_1..x_N]) /
-  hilbertPolynomial_(Projective=>false);
-assert(all(polys, p -> sub( p, ZZ )=== 49));
+  almostLexIdeal_( QQ[x_1..x_N] ) /
+  hilbertPolynomial_( Projective => false );
+assert( all( polys, p -> sub( p, ZZ )=== 49 ) );
 ///
 
 --------------------------------------------------------------------------------

@@ -201,35 +201,35 @@ doc ///
       Because there is no upper bound for $h_{S/I}$, both algorithms give valid
       results, and smallest possible upper bounds.
     CannedExample
-      i27 : p = HilbertPolynomial => 3*d^2-6*d+175;
+      i23 : p = HilbertPolynomial => 3*d^2-6*d+175;
 
-      i28 : first timing maxBettiNumbers(6, p,
+      i24 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Simplified", ResultsCount=>"None")
 
-      o28 = 5.207294879
+      o24 = 5.908441668
 
-      o28 : RR (of precision 53)
-
-      i29 : first timing maxBettiNumbers(6, p,
+      o24 : RR (of precision 53)
+      
+      i25 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Simplified", ResultsCount=>"All")
 
-      o29 = 6.675004686
+      o25 = 7.467646269
 
-      o29 : RR (of precision 53)
-
-      i30 : first timing maxBettiNumbers(6, p,
+      o25 : RR (of precision 53)
+      
+      i26 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Complete", ResultsCount=>"None")
 
-      o30 = 20.432215378
+      o26 = 21.462211888
 
-      o30 : RR (of precision 53)
-
-      i31 : first timing maxBettiNumbers(6, p,
+      o26 : RR (of precision 53)
+      
+      i27 : first timing maxBettiNumbers(6, p,
               Algorithm=>"Complete", ResultsCount=>"All")
 
-      o31 = 26.732769924
+      o27 = 28.756055662
 
-      o31 : RR (of precision 53)
+      o27 : RR (of precision 53)
   Caveat
     If @TT"Algorithm=>\"Simplified\""@ is forced, this may not return valid
     Hilbert functions for some inputs.

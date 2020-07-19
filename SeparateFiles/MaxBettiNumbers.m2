@@ -73,13 +73,13 @@ load "SanitizeInputs.m2"
 
 
 --------------------------------------------------------------------------------
---- Functions to build V and lb for use in the algorithms.
+--- Functions to build V and lowerBound for use in the algorithms.
 --------------------------------------------------------------------------------
 
 load "BuildVlb.m2"
 
 --------------------------------------------------------------------------------
---- End functions for building V and lb
+--- End functions for building V and lowerBound
 --------------------------------------------------------------------------------
 
 
@@ -137,7 +137,7 @@ load "MainMethod.m2"
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-beginDocumentation()
+beginDocumentation( )
 
 load "documentation.m2"
 

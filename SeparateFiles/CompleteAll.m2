@@ -2,7 +2,7 @@
 ---   it is simply a combination of the techniques in CompleteSome and
 ---   SimplifiedAll.
 
-CompleteAll = ( G, F, g, f, V, lb ) -> (
+CompleteAll = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { { { V#0#0 } } };
   G' := 0;
   g' := 0;
@@ -13,7 +13,7 @@ CompleteAll = ( G, F, g, f, V, lb ) -> (
       maxVHFList := reverse for j in reverse( g#d .. min( f#d, c - G' ) ) list (
         b' := c - j - G';
         i := j - g#d;
-        i' := max(lb#d#i - g', 0);
+        i' := max( lowerBound#d#i - g', 0 );
         if maxVDict'#?b' and maxVDict'#b'#?i' then (
           for maxV' in maxVDict'#b'#i' do (
             V0 := maxV' + V#d#i;

@@ -1,9 +1,9 @@
 maxBettiNumbers = method( TypicalValue => MaxBetti, Options => {
   HilbertPolynomial => null,
-  HilbertFunctionUpperBound => {},
-  HilbertFunctionLowerBound => {},
-  HilbertDifferenceUpperBound => {},
-  HilbertDifferenceLowerBound => {},
+  HilbertFunctionUpperBound => { },
+  HilbertFunctionLowerBound => { },
+  HilbertDifferenceUpperBound => { },
+  HilbertDifferenceLowerBound => { },
   ResultsCount => "None",
   Algorithm => "Automatic"
 } );
@@ -16,10 +16,10 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
   g := o.HilbertDifferenceLowerBound;
   f := o.HilbertDifferenceUpperBound;
   p := o.HilbertPolynomial;
-  if instance( p, ZZ ) then p = sub( p, QQ(monoid[getSymbol "i"]) );
+  if instance( p, ZZ ) then p = sub( p, QQ( monoid[ getSymbol "i" ] ) );
   algorithm :=
     if o.Algorithm === "Complete" then 1
-    else if o.Algorithm === "Simplified" or F === {} then 0
+    else if o.Algorithm === "Simplified" or F === { } then 0
     else -1;
   resultsCount := 
     if o.ResultsCount === "One" or o.ResultsCount === 1 then 1 
@@ -34,7 +34,7 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
   
   ---Automatically select algorithm
   if algorithm === -1 then (
-    GFgfsimplified := try sanitizeInputs( G, {}, g, f, p, n ) else null;
+    GFgfsimplified := try sanitizeInputs( G, { }, g, f, p, n ) else null;
     algorithm = if ( G, F, g, f ) ===  GFgfsimplified then 0 else 1;
   );
   algorithmToRun := {
@@ -49,14 +49,14 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
 
   
   ---Run Algorithm
-  ( V, lb ) := BuildVLowerBound( g, f, n );
-  result := algorithmToRun( G, F, g, f, V, lb );
+  ( V, lowerBound ) := BuildVLowerBound( g, f, n );
+  result := algorithmToRun( G, F, g, f, V, lowerBound );
   ---End Run Algorithm
   
   ---Parse Results
   hilbertFunctions :=
     if resultsCount === 0 then null 
-    else unravelToRun ( result#1, G, g, lb );
+    else unravelToRun ( result#1, G, g, lowerBound );
   bettiUpperBound := null;
   maximumBettiSum := null;
   maximalBettiNumbers := null;
@@ -72,13 +72,13 @@ maxBettiNumbers ZZ := o -> numberOfVariables -> (
     maximumBettiSum = last result#0;
   );
   realizable := maximumBettiSum === sum bettiUpperBound;
-  bettig := sum lexBettiNum( g, n );
+  bettig := sum lexBettiArray( g, n );
   bettiUpperBound = bettiUpperBound + bettig;
   maximumBettiSum = maximumBettiSum + sum bettig;
   if maximalBettiNumbers =!= null then
     maximalBettiNumbers = maximalBettiNumbers / plus_bettig;
   if hilbertFunctions =!= null then
-    hilbertFunctions = hilbertFunctions / accumulate_(plus, 0);
+    hilbertFunctions = hilbertFunctions / accumulate_( plus, 0 );
   ---End parse results
   
   ---Format results

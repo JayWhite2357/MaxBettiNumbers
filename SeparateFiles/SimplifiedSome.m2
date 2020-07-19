@@ -7,7 +7,7 @@
 --- Note, the last element of the V vectors is the sum of the Vq's, which is why
 ---   we use that element for tracking HF.
 
-SimplifiedSome = (G, F, g, f, V, lb) -> (
+SimplifiedSome = ( G, F, g, f, V, lowerBound ) -> (
   maxVDict' := { V#0#0 };
   G' := 0;
   F' := 0;
@@ -24,7 +24,7 @@ SimplifiedSome = (G, F, g, f, V, lb) -> (
       --- However, we can still utilize max \ transpose to maximize the vectors
       maxV := max \ transpose (
         for j from max( g#d, c - F' ) to min( f#d, c - G' )
-        when maxj'#( c - j - G' ) >= lb#d#( j - g#d ) list (
+        when maxj'#( c - j - G' ) >= lowerBound#d#( j - g#d ) list (
           maxj#( c - G#d ) = j;
           V0 := maxVDict'#( c - j - G' ) + V#d#( j - g#d );
           if last V0 === maxSum then (

@@ -1,4 +1,5 @@
 M2
+uninstallAllPackages
 restart
 loadPackage "MaxBettiNumbers";
 N = 5;
@@ -11,10 +12,15 @@ maxBettiNumbers(N,p,g,G,F, ResultsCount=>"One")
 maxBettiNumbers(N,p,g,G,F, ResultsCount=>"AllMaxBettiSum")
 maxBettiNumbers(N,p,g,G,F, ResultsCount=>"All")
 h = last oo.HilbertFunctions
-almostLexBettiNumbers(N, h)
+almostLexBetti(N, h)
 almostLexIdeal(QQ[x_1..x_N], h)
 maxBettiNumbers(N,p,g,G,F, Algorithm=>"Simplified", ResultsCount=>"One")
 
 uninstallAllPackages
 installPackage "MaxBettiNumbers"
 check "MaxBettiNumbers"
+
+
+
+--- Match bad parens (\((?!$)[^ ])|([^ ](?<!^)\))
+--- Match (){},with nospaces (\((?!$)[^ ])|([^ ](?<!^)\))|(\{(?!$)[^ ])|([^ ](?<!^)\})|(\[(?!$)[^ ])|([^ ](?<!^)\])|(,(?!$)[^ ])
