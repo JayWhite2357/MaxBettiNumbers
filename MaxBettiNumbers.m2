@@ -3,7 +3,7 @@ newPackage( "MaxBettiNumbers",
   Headline =>
   "Methods to find Maximum Betti numbers given bounds on the Hilbert function",
   Version => "0.9",
-  Date => "July 14, 2020",
+  Date => "July 24, 2020",
   Authors => { { Name => "Jay White", Email => "jay.white@uky.edu" } },
   DebuggingMode => true,
   HomePage => "https://github.com/JayWhite2357/maxbetti"
